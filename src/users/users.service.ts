@@ -24,4 +24,8 @@ export class UsersService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  public async checkAbilityToEditArticle(userId: string, articleId: string) {
+    // Check if the user has permission to edit the article
+  }
 }

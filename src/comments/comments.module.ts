@@ -7,5 +7,6 @@ import { CommentsService } from './comments.service';
   controllers: [CommentsController],
   providers: [CommentsService],
   exports: [CommentsService],
+  // ставимо на експорт, оскільки даний сервіс ми використовуємо ще в ArticlesService
 })
 export class CommentsModule {}

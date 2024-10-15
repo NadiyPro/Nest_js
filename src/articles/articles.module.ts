@@ -7,6 +7,7 @@ import { ArticlesService } from './articles.service';
 
 @Module({
   imports: [CommentsModule, UsersModule],
+  // затягуємо сюди інформацію, щоб ми могли їх використати в сервісах
   controllers: [ArticlesController],
   providers: [ArticlesService],
 })

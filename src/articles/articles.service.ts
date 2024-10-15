@@ -15,6 +15,8 @@ export class ArticlesService {
   create(dto: CreateArticleDto) {
     this.userService.checkAbilityToEditArticle('authorId', 'articleId');
     return 'This action adds a new user';
+    // при створені посту article, ми хочемо перевіряти user
+    // - userService: UsersService
   }
 
   findAll() {
@@ -33,4 +35,6 @@ export class ArticlesService {
     this.commentsService.deleteAllCommentsForArticle('articleId');
     return `This action removes a #${id} user`;
   }
+  // ми хочемо видаляючи article(пости), видаляти коментарі до нього comments
+  // - commentsService: CommentsService
 }

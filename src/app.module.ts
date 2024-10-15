@@ -3,9 +3,11 @@ import { Module } from '@nestjs/common';
 // import { AppController } from './app.controller';
 // import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { ArticlesModule } from './articles/articles.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
-  imports: [UsersModule],
+  imports: [ArticlesModule, UsersModule, CommentsModule],
   // У цьому полі визначаються інші модулі, які імпортуються в цей модуль.
   // Оскільки тут імпортів немає, масив порожній
   // controllers: [AppController],

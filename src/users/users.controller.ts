@@ -23,14 +23,14 @@ import { UsersService } from './users.service';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  @ApiOkResponse({ description: 'User created successfully', type: UserResDto })
+  @ApiOkResponse({ description: 'User created successfully' })
   @ApiForbiddenResponse({ description: 'Forbidden' })
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiConflictResponse({ description: 'Conflict' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @Post()
-  create(@Body() createUserDto: CreateUserReqDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserReqDto): Promise<UserResDto> {
+    return await this.usersService.create(createUserDto);
   }
 
   @Get()

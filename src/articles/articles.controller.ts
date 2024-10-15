@@ -14,7 +14,11 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
 @ApiBearerAuth()
-@ApiTags('Articles')
+// використовується для позначення того,
+// що певні маршрути (ендпоінти) захищені через Bearer-токен авторизацію,
+// наприклад,JWT (JSON Web Token)
+// (замочки вішаємо на наші ендпоінти, тобто доступ до них буде тільки через токен)
+@ApiTags('Articles') // назва групи до якої будуть належать ендпоінти розміщені нижче
 @Controller('articles')
 export class ArticlesController {
   constructor(private readonly usersService: ArticlesService) {}

@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 
-@ApiTags('Comments')
+@ApiTags('Comments') // назва групи до якої будуть належать ендпоінти розміщені нижче
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}

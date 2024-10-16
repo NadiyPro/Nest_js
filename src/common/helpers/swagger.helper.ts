@@ -25,7 +25,8 @@ export class SwaggerHelper {
         // Внутрішній цикл перевіряє кожен метод HTTP
         // (наприклад, get, post, put, delete, patch) для кожного шляху
         const route = document.paths[key]?.[method];
-        //  перевіряє, чи існує опис description цього маршруту для конкретного HTTP методу
+        //  перевіряє, чи існує опис цього маршруту (get/post/put/delete/patch)
+        // типу перевіряємо наприклад, чи існує в @Controller('users') запит get
         if (route) {
           Object.assign(route.responses, generalResponses);
           // до цього маршруту додаються загальні відповіді для всіх методів (400, 422, 500)
@@ -36,8 +37,8 @@ export class SwaggerHelper {
           // для помилок авторизації: 401 (Unauthorized) і 403 (Forbidden).
 
           if (method === 'delete') {
-            delete route.responses[200];
-            Object.assign(route.responses, deleteResponses);
+            delete route.responses[200]; // видаляємо відповідь з кодом 200
+            Object.assign(route.responses, deleteResponses); // встановлюється відповідь з кодом 204 (No Content)
           } // Якщо метод — це delete, замість відповіді з кодом 200 (успішний запит)
           // встановлюється відповідь з кодом 204 (No Content).
         }

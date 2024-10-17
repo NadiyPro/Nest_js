@@ -68,6 +68,8 @@ export class UserBaseReqDto {
   phone: string;
 
   @IsOptional()
+  // параметр не обовязковий, тобто навіть якщо не пройде перевірку,
+  // запит всеодно буде успішним
   @IsEnum(GenderEnum)
   gender: GenderEnum;
 
@@ -75,9 +77,10 @@ export class UserBaseReqDto {
   @IsOptional()
   isStudent: boolean = false;
 
-  @ApiProperty({ example: '12qw4qeASD' })
+  @ApiProperty({ example: '12qw4qeASD' }) // для опису даних моделей даних в DTO
   @Transform(TransformHelper.trim)
   @IsNotIn(['password', '123456', 'qwerty'])
+  // @IsNotIn Перевіряє, чи значення не входить до масиву заборонених значень.
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
     message:
       'Password must contain at least 1 letter, 1 number, and be at least 8 characters long',

@@ -55,8 +55,8 @@ export class UserBaseReqDto {
   age?: number;
 
   @ApiProperty({ example: 'string@test.com' })
-  @Transform(TransformHelper.trim)
-  @Transform(TransformHelper.toLowerCase)
+  @Transform(TransformHelper.trim) // Видаляє пробіли з початку та кінця рядка
+  @Transform(TransformHelper.toLowerCase) // Приводить переданий рядок до нижнього регістру
   @ValidateIf((obj) => !obj.phone)
   @IsString()
   @IsEmail() // замість цього правильніше кидати @Matches з регуляркою
@@ -64,6 +64,9 @@ export class UserBaseReqDto {
 
   @Transform(TransformHelper.trim)
   @ValidateIf((obj) => !obj.email)
+  // означає, що валідація для поля буде відбуватися лише тоді,
+  // коли поле email не заповнене
+  // (тобто, коли email відсутній або має значення null, undefined або порожній рядок).
   @IsString()
   phone: string;
 
@@ -77,7 +80,9 @@ export class UserBaseReqDto {
   @IsOptional()
   isStudent: boolean = false;
 
-  @ApiProperty({ example: '12qw4qeASD' }) // для опису даних моделей даних в DTO
+  @ApiProperty({ example: '12qw4qeASD' })
+  // для опису даних моделей даних в DTO,
+  // дозволяє створювати візуальні інтерфейси для тестування і документування API
   @Transform(TransformHelper.trim)
   @IsNotIn(['password', '123456', 'qwerty'])
   // @IsNotIn Перевіряє, чи значення не входить до масиву заборонених значень.
@@ -88,7 +93,16 @@ export class UserBaseReqDto {
   password: string;
 
   @ValidateNested({ each: true })
+  // @ValidateNested({ each: true })- це означає,
+  // що валідація буде виконуватись не лише для основного об'єкта,
+  // а й для його вкладених об'єктів або елементів масиву.
+  // each: true вказує, що якщо поле є масивом,
+  // валідація має виконуватись для кожного елемента цього масиву.
+  // Якщо поле не є масивом, валідація буде застосовуватись до самого об'єкта
   @IsArray()
   @Type(() => CarBaseReqDto)
+  // перетворення (трансформації) вхідних даних у конкретний тип або клас
+  // поле (або об'єкт) має бути перетворене у тип або клас CarBaseReqDto,
+  // коли дані надходять у вигляді JSON або іншого формату
   cars: CarBaseReqDto[];
 }

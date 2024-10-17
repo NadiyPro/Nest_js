@@ -59,7 +59,7 @@ export class UserBaseReqDto {
   @Transform(TransformHelper.toLowerCase)
   @ValidateIf((obj) => !obj.phone)
   @IsString()
-  @IsEmail()
+  @IsEmail() // замість цього правильніше кидати @Matches з регуляркою
   email: string;
 
   @Transform(TransformHelper.trim)

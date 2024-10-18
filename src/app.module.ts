@@ -5,17 +5,25 @@ import { CommentsModule } from './comments/comments.module';
 // import { AppController } from './app.controller';
 // import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './configs/configuration';
 
 @Module({
-  imports: [ArticlesModule, UsersModule, CommentsModule],
-  // У цьому полі визначаються інші модулі, які імпортуються в цей модуль.
-  // Оскільки тут імпортів немає, масив порожній
-  // controllers: [AppController],
-  // Тут вказані контролери, які використовуються в цьому модулі.
-  // У даному випадку це AppController.
-  // providers: [AppService],
-  // // Це поле визначає провайдери (сервіси),
-  // // які будуть доступні в модулі. У даному випадку це AppService
+  imports: [
+    ConfigModule.forRoot({
+      // forRoot() - метод, який налаштовує модуль конфігурації на глобальному рівні
+      load: [configuration],
+      // Функція configuration завантажує конфігураційні налаштування
+      isGlobal: true,
+      // Вказує, що цей модуль доступний глобально в застосунку,
+      // тобто його не потрібно додатково імпортувати в інших модулях
+    }),
+    // для того, щоб ми могли доступатись до змінних розміщених у файлі configuration
+    // (тобто, налаштувань різних параметрів, які можуть бути нами використані)
+    ArticlesModule,
+    UsersModule,
+    CommentsModule,
+  ],
 })
 export class AppModule {}
 // клас AppModule, який позначений як модуль завдяки декоратору @Module.

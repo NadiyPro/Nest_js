@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { CommentsService } from './services/comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { CommentsService } from './services/comments.service';
 
 @ApiTags('Comments') // назва групи до якої будуть належать ендпоінти розміщені нижче
 @Controller('comments')

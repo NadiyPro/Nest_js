@@ -68,8 +68,10 @@ async function bootstrap() {
   });
   // Налаштовує маршрут /docs, за яким буде доступна ваша Swagger документація
   const configService = app.get(ConfigService);
+  // дістаємо конфігураційний сервіс з configuration.ts
   const appConfig = configService.get<AppConfig>('app');
-  // отримує конфігурацію з конфігураційного сервісу
+  // отримує конфігурацію з configuration.ts
+  // доступившись до нього в по ключам 'app' з типом AppConfig
   await app.listen(appConfig.port, () => {
     console.log(
       `Server is running on http://${appConfig.host}:${appConfig.port}`,

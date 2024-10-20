@@ -53,7 +53,7 @@ import { Config, DatabaseConfig } from '../../configs/config.type';
               'migrations',
               '*.js',
             ),
-          ], //  Шлях до файлів міграцій у папці dist (щоб виконувати міграції)
+          ], // Шлях до файлів міграцій у папці dist (щоб виконувати міграції)
           synchronize: false,
           // Якщо встановлено в false,
           // TypeORM не синхронізуватиме схему бази даних автоматично

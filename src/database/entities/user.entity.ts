@@ -25,7 +25,7 @@ export class UserEntity {
   @Column('boolean', { default: true })
   isActive: boolean;
 
-  @Column('text')
+  @Column({ nullable: true })
   bio: string;
 
   // @VirtualColumn({

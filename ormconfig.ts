@@ -22,7 +22,8 @@ export default new DataSource({
   entities: [
     path.join(process.cwd(), 'src', 'database', 'entities', '*.entity.ts'),
   ],
-  // Шлях до файлів ентіті
+  // Шлях до файлів ентіті напряму до ts файлів, бо тут ми хочемо
+  // ранити наші міграції НЕ піднімаючи аплікейшн (app)
   // Ентіті - описує структуру таблиці в БД, це типу як моделі
   migrations: [
     path.join(process.cwd(), 'src', 'database', 'migrations', '*.ts'),
@@ -34,4 +35,5 @@ export default new DataSource({
 // підключення до бази даних PostgreSQL,
 // де динамічно отримуємо конфігурації для БД через configuration.ts,
 // тільки тут у нас шлях НЕ до папки dist з компільованим js файлами,
-// а напряму до ts файлів
+// а напряму до ts файлів, бо тут ми хочемо
+// ранити наші міграції НЕ піднімаючи аплікейшн (app)

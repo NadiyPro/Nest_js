@@ -5,6 +5,7 @@ import configuration from './configs/configuration';
 import { ArticlesModule } from './modules/articles/articles.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
+import { RedisModule } from './modules/redis/redis.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -28,6 +29,7 @@ import { UsersModule } from './modules/users/users.module';
     // в нашому прикладі ми доступаємось до змінних розміщених у файлі configuration
     // (тобто, налаштувань різних параметрів, які можуть бути нами використані)
     PostgresModule,
+    RedisModule,
     ArticlesModule,
     UsersModule,
     CommentsModule,

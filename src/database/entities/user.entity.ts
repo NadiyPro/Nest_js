@@ -32,4 +32,7 @@ export class UserEntity {
   //   query: () => 'SELECT CONCAT(firstName, lastName) FROM users WHERE id = id',
   // })
   // fullName: string;
+  // @VirtualColumn - це декоратор, який дозволяє створити колонку,
+  // що НЕ зберігається в базі даних, але результат якої розраховується під час запиту
+  // CONCAT(firstName, lastName) об'єднує два рядки (ім'я та прізвище)  по id = id
 }

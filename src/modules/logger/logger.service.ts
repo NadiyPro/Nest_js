@@ -15,9 +15,9 @@ export class LoggerService {
   // в локальному режимі для виведення повідомлень у консоль
 
   constructor(private readonly configService: ConfigService<Config>) {
-    //  через ConfigService (файлу configuration.ts),
-    //  який отримує конфігурацію p .env для Sentry
     const sentryConfig = this.configService.get<SentryConfig>('sentry');
+    // через ConfigService (файлу configuration.ts по ключу 'sentry'),
+    //  який отримує конфігурацію з .env для Sentry
     this.isLocal = sentryConfig.env === 'local';
     // визначає, чи працює середовище як локальне, щоб вирішити,
     // який тип логування використовувати (локальний або через Sentry)

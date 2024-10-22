@@ -66,7 +66,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     //  виклик логера виконується для всіх типів помилок незалежно від їх типу.
     //  Тобто, після того, як відбулося визначення
     //  типу помилки (BadRequestException, HttpException або інша),
-    //  інформація про помилку записується в логер,
+    //  інформація про помилку записується в логер (cайт Sentry),
     //  щоб мати повний запис про всі випадки, коли сталася помилка.
     response.status(status).json({
       statusCode: status, // HTTP-статус помилки

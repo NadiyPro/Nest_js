@@ -8,30 +8,48 @@ import { Config, SentryConfig } from '../../configs/config.type';
 @Injectable()
 export class LoggerService {
   private readonly isLocal: boolean;
+  //  визначає, чи працює додаток у локальному середовищі.
+  //  Це важливо для того, щоб знати, чи варто використовувати локальний логер або Sentry.
   private readonly logger = new Logger();
+  // вбудований логер NestJS, який використовується
+  // в локальному режимі для виведення повідомлень у консоль
 
   constructor(private readonly configService: ConfigService<Config>) {
+    //  через ConfigService (файлу configuration.ts),
+    //  який отримує конфігурацію p .env для Sentry
     const sentryConfig = this.configService.get<SentryConfig>('sentry');
     this.isLocal = sentryConfig.env === 'local';
+    // визначає, чи працює середовище як локальне, щоб вирішити,
+    // який тип логування використовувати (локальний або через Sentry)
 
     Sentry.init({
       dsn: sentryConfig.dsn,
+      // посилання (https://... записано в env),
+      // використовується для підключення до проекту в Sentry
       integrations: [nodeProfilingIntegration()],
-      // Tracing
-      tracesSampleRate: 1.0, //  Capture 100% of the transactions
+      // Tracing інтеграція для профілювання Node.js додатків
+      tracesSampleRate: 1.0,
+      //  встановлення частоти збору трасувальних та
+      //  профілювальних даних для Sentry (100% у цьому випадку)
       debug: sentryConfig.debug,
-      // Set sampling rate for profiling - this is relative to tracesSampleRate
+      // режим налагодження для Sentry, який може бути активованим у конфігурації
       profilesSampleRate: 1.0,
-    });
+    }); //  ініціалізація (підключення) до Sentry,
+    // системи для збору помилок і профілювання.
   }
 
   public log(message: string): void {
     if (this.isLocal) {
       this.logger.log(message);
+      // Якщо це локальне середовище, помилка та її стек виводяться в консоль
     } else {
       Sentry.captureMessage(message, 'log');
+      // Якщо це продакшн, помилка передається в Sentry
+      // для подальшого аналізу і відстеження
     }
-  }
+  } // Логування повідомлень відбувається через локальний логер
+  // у консоль (у локальному середовищі) або через Sentry (у продакшн середовищі).
+  // аналогічно працюють інші методи: info(), warn(), error().
   public info(message: string): void {
     if (this.isLocal) {
       this.logger.log(message);
@@ -52,5 +70,6 @@ export class LoggerService {
     } else {
       Sentry.captureException(error, { level: 'error' });
     }
-  }
+  } // Метод error() додатково передає стек виключення
+  // для більш детального логування помилок
 }

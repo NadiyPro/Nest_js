@@ -6,6 +6,7 @@ import { GlobalExceptionFilter } from './common/filters/global-exception.filter'
 import configuration from './configs/configuration';
 import { ArticlesModule } from './modules/articles/articles.module';
 import { CommentsModule } from './modules/comments/comments.module';
+import { LoggerModule } from './modules/logger/logger.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { UsersModule } from './modules/users/users.module';
@@ -30,6 +31,8 @@ import { UsersModule } from './modules/users/users.module';
     // наприклад, з файлів .env, з об'єктів конфігурації, або з інших джерел.
     // в нашому прикладі ми доступаємось до змінних розміщених у файлі configuration
     // (тобто, налаштувань різних параметрів, які можуть бути нами використані)
+    LoggerModule,
+    // RepositoryModule,
     PostgresModule,
     RedisModule,
     ArticlesModule,

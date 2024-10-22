@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { Config, DatabaseConfig } from '../../../configs/config.type';
@@ -12,7 +12,12 @@ export class UsersService {
 
   public async create(createUserDto: CreateUserReqDto): Promise<UserResDto> {
     const appConfig = this.configService.get<DatabaseConfig>('database');
-    console.log(appConfig);
+    throw new ForbiddenException('sdfg');
+    // щоб протестувати роботу фільтрів по відлову помилок
+    // викликаємо помилку з назвою ForbiddenException із повідомленням 'sdfg'
+    // ForbiddenException - це спеціальний вид виключення(помилки),
+    // який використовується в NestJS для відображення помилки "403 Forbidden
+    // (користувачеві не дозволено виконувати операцію)
     return {} as UserResDto;
   }
 

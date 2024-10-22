@@ -44,4 +44,9 @@ export default (): Config => ({
   // Воно є сумісним з Amazon S3 API
   // відмінність miniO від aws в тому,
   // що ця штука в нас локальна і для локальної розробки нам не треба буде чіпати бакети на aws
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
+    env: process.env.SENTRY_ENV,
+    debug: process.env.SENTRY_DEBUG === 'true',
+  },
 });

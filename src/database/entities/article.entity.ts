@@ -30,12 +30,16 @@ export class ArticleEntity extends CreateUpdateModel {
 
   @OneToMany(() => LikeEntity, (entity) => entity.article)
   likes?: LikeEntity[];
+  // один One пост може мати багато Many лайків
 
   @Column()
   user_id: string;
   @ManyToOne(() => UserEntity, (entity) => entity.articles)
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
+  // багато Many постів може належати одному юзеру One
+  // поле по якому робили звязку буде записане в БД
+  // під назвою 'user_id' завдяки @JoinColumn({ name: 'user_id' })
 
   @ManyToMany(() => TagEntity, (entity) => entity.articles)
   tags?: TagEntity[];

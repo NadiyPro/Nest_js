@@ -24,10 +24,12 @@ export class LikeEntity {
   @ManyToOne(() => UserEntity, (entity) => entity.likes)
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
+  // багато Many лайків може поставити один One юзер
 
   @Column()
   article_id: string;
   @ManyToOne(() => ArticleEntity, (entity) => entity.likes)
   @JoinColumn({ name: 'article_id' })
   article?: ArticleEntity;
+  // багато Many лайків може мати один пост One
 }

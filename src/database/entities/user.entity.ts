@@ -45,6 +45,9 @@ export class UserEntity extends CreateUpdateModel {
 
   @OneToMany(() => RefreshTokenEntity, (entity) => entity.user)
   refreshTokens?: RefreshTokenEntity[];
+  // тут entity - це RefreshTokenEntity,
+  // а entity.user - це поле user з табл RefreshTokenEntity,
+  // яке ми додали при звязці
   // виконуємо зв'язку Багато-до-одного/один-до-багатьох
   // @ManyToOne(() => , () => ) / @OneToMany(() =>, () => ) - оскільки
   // у одного юзера може бути багато токенів @OneToMany,
@@ -53,7 +56,7 @@ export class UserEntity extends CreateUpdateModel {
   // у одного юзера One може бути багато Many токенів
   //  refreshTokens?: ми ставимо як не обовзяковий,
   //  бо ми можемо використовувати даний UserEntity,
-  //  щоб просто дістати якусь інформацію по юзеру,
+  //  щоб просто дістати якусь інформацію просто по юзеру,
   //  але у цього юзера refreshTokens може і не буди
   //  refreshTokens: ми ставимо, як обовязковий, якщо ми хочемо
   //  конкретно витягнути юзерів і всі токени які їм належать (а не просто інфо по юзеру)

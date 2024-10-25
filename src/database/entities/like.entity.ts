@@ -18,6 +18,9 @@ export class LikeEntity {
 
   @CreateDateColumn()
   created: Date;
+  // сюди ми додаємо саме CreateDateColumn,а екстендимо клас CreateUpdateModel
+  // оскільки ми можемо лише поставити вбо прибрати лайк,а апдейтити ми його не можемо,
+  // відповідно нам треба тільки метод CreateDateColumn()
 
   @Column()
   user_id: string;

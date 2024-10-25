@@ -43,6 +43,10 @@ export class ArticleEntity extends CreateUpdateModel {
 
   @ManyToMany(() => TagEntity, (entity) => entity.articles)
   tags?: TagEntity[];
+  // багато Many постів можуть мати однакові теги,
+  // при цьому багато Many тегів можуть відноситися до одного посту
+  // виходить відношення багато до багатьох
+  // (пости/теги наприклад ті що в інстаграм / фб і т.п)
 }
 // @OneToOne(() =>):
 // тут ми завдяки  @JoinColumn створюємо колонку, яка буде містити зовнішній ключ foreign key

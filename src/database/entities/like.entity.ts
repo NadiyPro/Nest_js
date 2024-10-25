@@ -24,6 +24,10 @@ export class LikeEntity {
 
   @Column()
   user_id: string;
+  // створюємо окремо колонку, оскільки при автоматичному створені TypeORM її НЕ типізує,
+  // для того щоб в нас була можливість доступитися до цієї колонки,
+  // тобто щоб ми могли її мапнути, нам треба прописати типізацію для колонки,
+  // яку ми хочемо щоб автоматим нам створив TypeORM через механізм @JoinColumn({ name: 'user_id' })
   @ManyToOne(() => UserEntity, (entity) => entity.likes)
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;

@@ -5,10 +5,21 @@ import { Config, DatabaseConfig } from '../../../configs/config.type';
 import { CreateUserReqDto } from '../models/dto/req/create-user.req.dto';
 import { UpdateUserReqDto } from '../models/dto/req/update-user.req.dto';
 import { UserResDto } from '../models/dto/res/user.res.dto';
+import { UserRepository } from '../../repository/services/user.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly configService: ConfigService<Config>) {}
+  constructor(
+    private readonly configService: ConfigService<Config>,
+    private userRepository: UserRepository,
+  ) {}
+  // інжектує залежності configService та userRepository у UsersService
+  // UsersService виконує бізнес-логіку, тоді як UserRepository відповідає
+  // за прямий доступ до бази даних.
+  // configService дозволяє отримувати конфігураційні налаштування
+  // з файлів конфігурації (наприклад, database, api, auth, тощо).
+  // userRepository надає методи для доступу до даних користувачів у базі даних,
+  // такі як створення, оновлення або видалення користувачів
 
   public async create(createUserDto: CreateUserReqDto): Promise<UserResDto> {
     const appConfig = this.configService.get<DatabaseConfig>('database');

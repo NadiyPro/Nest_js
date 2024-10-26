@@ -1,11 +1,11 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { ArticleEntity } from './article.entity';
+import { CommentEntity } from './comment.entity';
+import { FollowEntity } from './follow.entity';
 import { LikeEntity } from './like.entity';
 import { CreateUpdateModel } from './models/create-update.model';
 import { RefreshTokenEntity } from './refresh-token.entity';
-import { CommentEntity } from './comment.entity';
-import { FollowEntity } from './follow.entity';
 
 @Entity('users') // назва табл в БД
 export class UserEntity extends CreateUpdateModel {
@@ -74,9 +74,11 @@ export class UserEntity extends CreateUpdateModel {
 
   @OneToMany(() => FollowEntity, (entity) => entity.follower)
   followers?: FollowEntity[];
+  // на одного юзера багато хто може підписатися
 
   @OneToMany(() => FollowEntity, (entity) => entity.following)
   followings?: FollowEntity[];
+  // на кого підписався (на багатьох може підписатися один юзер)
 }
 // @OneToOne(() =>):
 // тут ми завдяки  @JoinColumn створюємо колонку, яка буде містити зовнішній ключ foreign key

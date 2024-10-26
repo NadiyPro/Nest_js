@@ -23,10 +23,12 @@ export class FollowEntity {
   @ManyToOne(() => UserEntity, (entity) => entity.followers)
   @JoinColumn({ name: 'follower_id' })
   follower?: UserEntity;
+  //хто підписався (багато хто може підписатися на одного юзера)
 
   @Column()
   following_id: string;
   @ManyToOne(() => UserEntity, (entity) => entity.followings)
   @JoinColumn({ name: 'following_id' })
   following?: UserEntity;
+  // на кого підписався (на багатьох може підписатися один юзер)
 }

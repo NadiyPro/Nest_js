@@ -4,11 +4,12 @@ import Redis from 'ioredis';
 
 import { Config, RedisConfig } from '../../configs/config.type';
 import { RedisService } from './services/redis.service';
+import { REDIS_CLIENT } from './models/redis.constants';
 
 @Module({
   providers: [
     {
-      provide: 'REDIS',
+      provide: REDIS_CLIENT,
       //  провайдер реєструється під назвою 'REDIS'.
       //  У будь-якому іншому місці програми його можна буде підключити через токен 'REDIS'
       useFactory: (configService: ConfigService<Config>) => {

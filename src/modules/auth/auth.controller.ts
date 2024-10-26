@@ -15,9 +15,14 @@ export class AuthController {
   public async signUp(@Body() dto: SignUpReqDto): Promise<AuthResDto> {
     return await this.authService.signUp(dto);
   }
+  // singUp - тут логінація вконується (перший вхід з хешуванням паролю)
 
   @Post('sign-in')
   public async signIn(@Body() dto: SignInReqDto): Promise<AuthResDto> {
     return await this.authService.signIn(dto);
   }
+  // signIn - тут проходить аутентифікація,
+  // перевірка чи існує в нас такий юзер з таким то паролем,
+  // якщо існує то генеруємо нову пару токенів
+  // (повторний вхід, перевірка паролю, ат видача нової пари токенів)
 }

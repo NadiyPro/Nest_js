@@ -10,6 +10,8 @@ import { LoggerModule } from './modules/logger/logger.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { RepositoryModule } from './modules/repository/repository.module';
 
 @Module({
   imports: [
@@ -32,9 +34,11 @@ import { UsersModule } from './modules/users/users.module';
     // в нашому прикладі ми доступаємось до змінних розміщених у файлі configuration
     // (тобто, налаштувань різних параметрів, які можуть бути нами використані)
     LoggerModule,
-    // RepositoryModule,
+    RepositoryModule,
     PostgresModule,
     RedisModule,
+
+    AuthModule,
     ArticlesModule,
     UsersModule,
     CommentsModule,

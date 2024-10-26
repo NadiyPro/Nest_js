@@ -10,7 +10,9 @@ export class BaseAuthReqDto extends PickType(BaseUserReqDto, [
   'image',
   'name',
 ]) {
-  @IsNotEmpty()
+  @IsNotEmpty() // перевіряє, щоб значення поля не було порожнім
   @IsString()
   readonly deviceId: string;
 }
+// PickType() дозволяє "вибрати" тільки конкретні поля з базового класу
+// і використовувати їх у новому DTO

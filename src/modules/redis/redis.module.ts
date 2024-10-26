@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
 import { Config, RedisConfig } from '../../configs/config.type';
+import { RedisService } from './services/redis.service';
 
 @Module({
   providers: [
@@ -25,7 +26,9 @@ import { Config, RedisConfig } from '../../configs/config.type';
       inject: [ConfigService],
       // Вказується масив сервісів, які інжектуються (підкидується) в useFactory
     },
+    RedisService,
   ],
+  exports: [RedisService],
 }) // підключення до Redis через бібліотеку ioredis
 // providers - визначає, які провайдери (сервіси або інші інстанції)
 // будуть доступні у цьому модулі.

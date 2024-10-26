@@ -4,6 +4,8 @@ import { ArticleEntity } from './article.entity';
 import { LikeEntity } from './like.entity';
 import { CreateUpdateModel } from './models/create-update.model';
 import { RefreshTokenEntity } from './refresh-token.entity';
+import { CommentEntity } from './comment.entity';
+import { FollowEntity } from './follow.entity';
 
 @Entity('users') // назва табл в БД
 export class UserEntity extends CreateUpdateModel {
@@ -65,6 +67,16 @@ export class UserEntity extends CreateUpdateModel {
 
   @OneToMany(() => LikeEntity, (entity) => entity.user)
   likes?: LikeEntity[];
+
+  @OneToMany(() => CommentEntity, (entity) => entity.user)
+  comments?: CommentEntity[];
+  // від одного юзера може бути багато коментарів
+
+  @OneToMany(() => FollowEntity, (entity) => entity.follower)
+  followers?: FollowEntity[];
+
+  @OneToMany(() => FollowEntity, (entity) => entity.following)
+  followings?: FollowEntity[];
 }
 // @OneToOne(() =>):
 // тут ми завдяки  @JoinColumn створюємо колонку, яка буде містити зовнішній ключ foreign key

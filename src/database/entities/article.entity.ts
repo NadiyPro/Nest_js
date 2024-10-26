@@ -13,6 +13,7 @@ import { LikeEntity } from './like.entity';
 import { CreateUpdateModel } from './models/create-update.model';
 import { TagEntity } from './tag.entity';
 import { UserEntity } from './user.entity';
+import { CommentEntity } from './comment.entity';
 
 @Entity(TableNameEnum.ARTICLES)
 export class ArticleEntity extends CreateUpdateModel {
@@ -31,6 +32,10 @@ export class ArticleEntity extends CreateUpdateModel {
   @OneToMany(() => LikeEntity, (entity) => entity.article)
   likes?: LikeEntity[];
   // один One пост може мати багато Many лайків
+
+  @OneToMany(() => CommentEntity, (entity) => entity.article)
+  comments?: CommentEntity[];
+  // від одного юзера може бути багато коментарів
 
   @Column()
   user_id: string;

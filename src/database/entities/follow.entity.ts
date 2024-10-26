@@ -30,5 +30,5 @@ export class FollowEntity {
   @ManyToOne(() => UserEntity, (entity) => entity.followings)
   @JoinColumn({ name: 'following_id' })
   following?: UserEntity;
-  // на кого підписався (на багатьох може підписатися один юзер)
+  // на кого підписався (на багатьох кого може підписатися один юзер)
 }

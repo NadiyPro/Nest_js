@@ -74,11 +74,11 @@ export class UserEntity extends CreateUpdateModel {
 
   @OneToMany(() => FollowEntity, (entity) => entity.follower)
   followers?: FollowEntity[];
-  // на одного юзера багато хто може підписатися
+  // хто підписався (багато хто може підписатися на одного юзера)
 
   @OneToMany(() => FollowEntity, (entity) => entity.following)
   followings?: FollowEntity[];
-  // на кого підписався (на багатьох може підписатися один юзер)
+  // на кого підписався (на багатьох кого може підписатися один юзер)
 }
 // @OneToOne(() =>):
 // тут ми завдяки  @JoinColumn створюємо колонку, яка буде містити зовнішній ключ foreign key

@@ -1,7 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 
 import { ArticlesModule } from '../articles/articles.module';
-import { UserRepository } from '../repository/services/user.repository';
 import { UsersService } from './services/users.service';
 import { UsersAdminService } from './services/users-admin.service';
 import { UsersController } from './users.controller';
@@ -14,8 +13,8 @@ import { UsersAdminController } from './users-admin.controller';
   // але спочатку підключи один з них, а потім повернись до другого".
   // Це розриває циклічну залежність.
   controllers: [UsersController, UsersAdminController],
-  providers: [UsersService, UsersAdminService, UserRepository],
-  exports: [UsersService, UserRepository],
+  providers: [UsersService, UsersAdminService],
+  exports: [UsersService],
   // ставимо на експорт, оскільки даний сервіс ми використовуємо ще в ArticlesService
 })
 export class UsersModule {}

@@ -28,6 +28,7 @@ import { REDIS_CLIENT } from './models/redis.constants';
       // Вказується масив сервісів, які інжектуються (підкидується) в useFactory
     },
     RedisService,
+    //  провайдер RedisService зв'язаний з 'REDIS_CLIENT''
   ],
   exports: [RedisService],
 }) // підключення до Redis через бібліотеку ioredis

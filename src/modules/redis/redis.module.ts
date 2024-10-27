@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
 import { Config, RedisConfig } from '../../configs/config.type';
-import { RedisService } from './services/redis.service';
 import { REDIS_CLIENT } from './models/redis.constants';
+import { RedisService } from './services/redis.service';
 
 @Module({
   providers: [

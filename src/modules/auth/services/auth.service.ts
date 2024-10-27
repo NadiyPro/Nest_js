@@ -22,19 +22,25 @@ export class AuthService {
   public async signUp(dto: SignUpReqDto): Promise<AuthResDto> {
     await this.isEmailNotExistOrThrow(dto.email);
     const password = await bcrypt.hash(dto.password, 10);
+    // хешуємо пароль
     const user = await this.userRepository.save(
       this.userRepository.create({ ...dto, password }),
     );
+    // create - створює нову сутність(нового юзера та захешований пароль)
+    // save - зберігає нову створену сутність в БД
+
     const tokens = await this.tokenService.generateAuthTokens({
       userId: user.id,
       deviceId: dto.deviceId,
     });
+    // генеруємо пару токенів для нового юзера (accessToken та refreshToken)
     await Promise.all([
       this.authCacheService.saveToken(
         tokens.accessToken,
         user.id,
         dto.deviceId,
       ),
+      // зберігаємо accessToken для нового юзера в кеш (Redis)
       this.refreshTokenRepository.save(
         this.refreshTokenRepository.create({
           user_id: user.id,
@@ -42,9 +48,15 @@ export class AuthService {
           refreshToken: tokens.refreshToken,
         }),
       ),
+      // зберігаємо refreshToken для нового юзера в БД
+      // create - створює нову сутність(нового юзера та захешований пароль)
+      // save - зберігає нову створену сутність в БД
     ]);
+    // Promise.all іиконує асинхроних запуск, тобто
+    // одночасно буде виконуватися запис аксес токенів в кеш і рефреш токена в БД
 
     return { user: UserMapper.toResDto(user), tokens };
+    // мапаємо юзера, потім повертаємо у відповідь інфо по юзеру та пару токенів по ньому
   }
 
   public async signIn(dto: SignInReqDto): Promise<any> {

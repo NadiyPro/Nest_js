@@ -14,4 +14,4 @@ export class RefreshTokenRepository extends Repository<RefreshTokenEntity> {
   // як спілкуватися з базою даних, і ми використовуємо його для роботи з RefreshTokenEntity
   // (дозволяє використовувати всі методи create/findAll/findOne/update/remove/delete і т.п)
 }
-// репозиторій - є  "посередником" між нашим кодом і базою даних
+// репозиторій - є "посередником" між нашим кодом і базою даних

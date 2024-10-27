@@ -68,5 +68,7 @@ export class AuthService {
     if (user) {
       throw new Error('Email already exists');
     }
-  }
+  } // перевіряємо на унікальність email, тобто,
+  // якщо в нас вже є юзер з таким email, то ми кинемо помилку,
+  // бо email у юзера при реєстрації signUp на нашій платформі, має бути унікальним
 }

@@ -28,7 +28,8 @@ import { RedisService } from './services/redis.service';
       // Вказується масив сервісів, які інжектуються (підкидується) в useFactory
     },
     RedisService,
-    //  провайдер RedisService зв'язаний з 'REDIS_CLIENT''
+    //  провайдер RedisService зв'язаний з 'REDIS_CLIENT'
+    // розміщений тут він нам дає можливість стукатись зовні, тобто далі викликати експорт з ним
   ],
   exports: [RedisService],
 }) // підключення до Redis через бібліотеку ioredis

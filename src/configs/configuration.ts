@@ -13,7 +13,10 @@ export default (): Config => ({
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     name: process.env.POSTGRES_DB,
-  }, // Налаштування бази даних PostgreSQL
+  },
+  // parseInt — це функція в JavaScript,
+  // яка перетворює рядок (string) на ціле число (integer)
+  // Налаштування бази даних PostgreSQL
   //Тип даних: Реляційна база даних для структурованих даних
   // Призначення: Використовується для зберігання таблиць з даними,
   // що мають зв'язки між собою, складні запити SQL, підтримка JSON,

@@ -22,14 +22,22 @@ export class CommentEntity extends CreateUpdateModel {
 
   @Column()
   article_id: string;
-  @ManyToOne(() => ArticleEntity, (entity) => entity.comments)
+  @ManyToOne(() => ArticleEntity, (entity) => entity.comments, {
+    onDelete: 'CASCADE',
+  })
+  // додаємо властивість onDelete: 'CASCADE', щоб при видаленні поста,
+  // також видаляться його коментарі
   @JoinColumn({ name: 'article_id' })
   article?: ArticleEntity;
   // багато коментарів може бути у одного поста
 
   @Column()
   user_id: UserID;
-  @ManyToOne(() => UserEntity, (entity) => entity.comments)
+  @ManyToOne(() => UserEntity, (entity) => entity.comments, {
+    onDelete: 'CASCADE',
+  })
+  // додаємо властивість onDelete: 'CASCADE', щоб при видаленні юзера,
+  // також видаляться всі коментарі, які цей юзер створив під будь яким постом
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
   // багато коментарів може бути від одного юзера

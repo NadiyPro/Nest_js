@@ -1,12 +1,12 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import { UserID } from '../../common/types/entity-ids.type';
 import { ArticleEntity } from './article.entity';
 import { CommentEntity } from './comment.entity';
 import { FollowEntity } from './follow.entity';
 import { LikeEntity } from './like.entity';
 import { CreateUpdateModel } from './models/create-update.model';
 import { RefreshTokenEntity } from './refresh-token.entity';
-import { UserID } from '../../common/types/entity-ids.type';
 
 @Entity('users') // назва табл в БД
 export class UserEntity extends CreateUpdateModel {

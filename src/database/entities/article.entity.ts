@@ -40,7 +40,11 @@ export class ArticleEntity extends CreateUpdateModel {
 
   @Column()
   user_id: UserID;
-  @ManyToOne(() => UserEntity, (entity) => entity.articles)
+  @ManyToOne(() => UserEntity, (entity) => entity.articles, {
+    onDelete: 'CASCADE',
+  })
+  // додаємо властивість onDelete: 'CASCADE', щоб при видаленні юзера,
+  // також видаляться його пости
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
   // багато Many постів може належати одному юзеру One

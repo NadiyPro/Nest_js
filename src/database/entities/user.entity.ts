@@ -6,6 +6,7 @@ import { FollowEntity } from './follow.entity';
 import { LikeEntity } from './like.entity';
 import { CreateUpdateModel } from './models/create-update.model';
 import { RefreshTokenEntity } from './refresh-token.entity';
+import { UserID } from '../../common/types/entity-ids.type';
 
 @Entity('users') // назва табл в БД
 export class UserEntity extends CreateUpdateModel {
@@ -13,7 +14,7 @@ export class UserEntity extends CreateUpdateModel {
   // Це декоратор, який вказує, що поле id є первинним ключем (PRIMARY KEY)
   // і генерується автоматично у форматі UUID
   // (універсальний унікальний ідентифікатор)
-  id: string;
+  id: UserID;
   // Поле id буде використовуватися для
   // унікальної ідентифікації кожного запису (користувача).
 

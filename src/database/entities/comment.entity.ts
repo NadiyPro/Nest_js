@@ -6,11 +6,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { CommentID, UserID } from '../../common/types/entity-ids.type';
 import { ArticleEntity } from './article.entity';
 import { TableNameEnum } from './enums/table-name.enum';
 import { CreateUpdateModel } from './models/create-update.model';
 import { UserEntity } from './user.entity';
-import { CommentID, UserID } from '../../common/types/entity-ids.type';
 
 @Entity(TableNameEnum.COMMENTS)
 export class CommentEntity extends CreateUpdateModel {

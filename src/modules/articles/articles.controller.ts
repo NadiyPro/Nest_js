@@ -9,9 +9,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { ArticlesService } from './services/articles.service';
+import { ArticleID } from '../../common/types/entity-ids.type';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { ArticlesService } from './services/articles.service';
 
 @ApiBearerAuth()
 // використовується для позначення того,
@@ -34,17 +35,17 @@ export class ArticlesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: ArticleID) {
     return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateArticleDto) {
+  update(@Param('id') id: ArticleID, @Body() updateUserDto: UpdateArticleDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: ArticleID) {
     return this.usersService.remove(+id);
   }
 }

@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { ArticleID, LikeID, UserID } from '../../common/types/entity-ids.type';
 import { ArticleEntity } from './article.entity';
 import { TableNameEnum } from './enums/table-name.enum';
 import { UserEntity } from './user.entity';
@@ -14,7 +15,7 @@ import { UserEntity } from './user.entity';
 @Entity(TableNameEnum.LIKES)
 export class LikeEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: LikeID;
 
   @CreateDateColumn()
   created: Date;
@@ -23,7 +24,7 @@ export class LikeEntity {
   // відповідно нам треба тільки метод CreateDateColumn()
 
   @Column()
-  user_id: string;
+  user_id: UserID;
   // створюємо окремо колонку, оскільки при автоматичному створені TypeORM її НЕ типізує,
   // для того щоб в нас була можливість доступитися до цієї колонки,
   // тобто щоб ми могли її мапнути, нам треба прописати типізацію для колонки,
@@ -34,7 +35,7 @@ export class LikeEntity {
   // багато Many лайків може поставити один One юзер
 
   @Column()
-  article_id: string;
+  article_id: ArticleID;
   @ManyToOne(() => ArticleEntity, (entity) => entity.likes)
   @JoinColumn({ name: 'article_id' })
   article?: ArticleEntity;

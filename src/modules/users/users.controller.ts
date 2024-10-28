@@ -11,6 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
 import { UsersService } from './services/users.service';
+import { UserID } from '../../common/types/entity-ids.type';
 
 @ApiTags('Users')
 @Controller('users')
@@ -18,7 +19,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get(':id')
-  public async findOne(@Param('id', ParseUUIDPipe) id: string) {
+  public async findOne(@Param('id', ParseUUIDPipe) id: UserID) {
     return this.usersService.findOne(+id);
   }
 
@@ -31,7 +32,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  public async remove(@Param('id') id: string) {
+  public async remove(@Param('id') id: UserID) {
     return this.usersService.remove(+id);
   }
 }

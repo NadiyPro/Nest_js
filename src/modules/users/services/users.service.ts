@@ -33,4 +33,8 @@ export class UsersService {
       where: { id: articleId, user_id: userId },
     });
   }
+  // для прикладу перевіремо, чи має користувач (userId) дозвіл на
+  // редагування певного коментаря який знаходиться під articleId
+  //  через findOne, знаходимо в БД пост,
+  //  який відповідає articleId та належить користувачу з userId
 }

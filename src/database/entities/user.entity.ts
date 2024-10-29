@@ -27,7 +27,7 @@ export class UserEntity extends CreateUpdateModel {
   // unique: true - означає, що значення цього поля повинні бути унікальними
   email: string;
 
-  @Column('text')
+  @Column('text', { select: false })
   password: string;
 
   @Column('boolean', { default: true })

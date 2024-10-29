@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
@@ -64,7 +64,51 @@ export class AuthService {
   }
 
   public async signIn(dto: SignInReqDto): Promise<any> {
-    // return await this.authService.create(dto);
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email }, // знаходимо користувача за електронною поштою
+      select: ['id', 'password'],
+      //  select - дозволяє витягнути лише id та password користувача, що оптимізує запит.
+    });
+    if (!user) {
+      throw new UnauthorizedException();
+    } // Якщо користувача не знайдено, буде викинуто помилку,
+    //  яка повідомляє, що користувач не авторизований
+
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+    // перевіряємо, чи збігається пароль, введений користувачем (dto.password),
+    // з паролем, збереженим у базі даних (user.password)
+    if (!isPasswordValid) {
+      throw new UnauthorizedException();
+    }
+
+    const tokens = await this.tokenService.generateAuthTokens({
+      userId: user.id,
+      deviceId: dto.deviceId,
+    });
+    // генеруємо пару токенів accessToken і refreshToken на основі userId та deviceId
+    await Promise.all([
+      this.authCacheService.saveToken(
+        tokens.accessToken,
+        user.id,
+        dto.deviceId,
+      ), // зберігаємо access токен в кеш (Redis)
+      this.refreshTokenRepository.save(
+        this.refreshTokenRepository.create({
+          user_id: user.id,
+          deviceId: dto.deviceId,
+          refreshToken: tokens.refreshToken,
+        }),
+      ), // зберігаємо refreshToken токен в БД
+      // create - створює нову сутність(нового юзера та захешований пароль)
+      // save - зберігає нову створену сутність в БД
+    ]);
+    // Promise.all, щоб паралельно зберегти токени в різних місцях для кращої продуктивності
+    const userEntity = await this.userRepository.findOneBy({ id: user.id });
+    // витягаємо з БД повну інфо про користувача (всі поля), використовуючи його id
+
+    return { user: UserMapper.toResDto(userEntity), tokens };
+    // Метод UserMapper.toResDto бере об'єкт user типу UserEntity,
+    // отриманий з бази даних, і перетворює його (мапає) на об'єкт UserResDto.
   }
 
   private async isEmailNotExistOrThrow(email: string) {

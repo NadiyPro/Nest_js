@@ -20,7 +20,13 @@ import { UsersService } from './services/users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // @UseGuards(JwtAccessGuard)
+  // для того, щоб підключити перевірку через guards
+  // (в swagger біля цього шляху буде відображено замочок)
+  // @UseGuards() повинен бути розміщенний обовязково біля @ApiBearerAuth()
   @ApiBearerAuth()
+  // вказує, що для цього маршруту потрібна Bearer-аутентифікація,
+  // додає інформацію до документації Swagger
   @Get('me')
   public async findMe(@CurrentUser() userData: IUserData) {
     return await this.usersService.findMe(userData);

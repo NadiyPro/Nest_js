@@ -3,9 +3,9 @@ import { ConfigService } from '@nestjs/config/dist/config.service';
 import { JwtService } from '@nestjs/jwt';
 
 import { Config, JwtConfig } from '../../../configs/config.type';
+import { TokenType } from '../models/enums/token-type.enum';
 import { IJwtPayload } from '../models/interfaces/jwt-payload.interface';
 import { ITokenPair } from '../models/interfaces/token-pair.interface';
-import { TokenType } from '../models/enums/token-type.enum';
 
 @Injectable()
 export class TokenService {

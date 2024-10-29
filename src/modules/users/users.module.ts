@@ -12,8 +12,8 @@ import { UsersAdminController } from './users-admin.controller';
   // forwardRef дозволяє сказати NestJS: "Ми знаємо, що модулі залежать один від одного,
   // але спочатку підключи один з них, а потім повернись до другого".
   // Це розриває циклічну залежність.
-  controllers: [UsersController, UsersAdminController],
-  providers: [UsersService, UsersAdminService],
+  controllers: [UsersController],
+  providers: [UsersService],
   exports: [UsersService],
   // ставимо на експорт, оскільки даний сервіс ми використовуємо ще в ArticlesService
 })

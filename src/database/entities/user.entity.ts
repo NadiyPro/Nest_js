@@ -29,6 +29,8 @@ export class UserEntity extends CreateUpdateModel {
 
   @Column('text', { select: false })
   password: string;
+  //  { select: false } означає, що поле password не буде вибиратися
+  //  за замовчуванням при виконанні запитів до бази даних.
 
   @Column('boolean', { default: true })
   isActive: boolean;

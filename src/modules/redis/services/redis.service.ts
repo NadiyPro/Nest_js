@@ -27,16 +27,14 @@ export class RedisService {
   public async remOneFromSet(key: string, setMember: string): Promise<number> {
     return await this.redisClient.srem(key, setMember);
   }
-  // видаляє елемент із множини за допомогою команди srem
-  // key: ключ множини, setMember: значення, яке потрібно видалити з множини
   // srem видаляє елемент із множини, якщо він є у ній, є повертає кількість елементів, які були видалені
+  // key: ключ множини, setMember: значення, яке потрібно видалити з множини
 
   public async deleteByKey(key: string): Promise<number> {
     return await this.redisClient.del(key);
   }
-  // deleteByKey метод який видаляє весь контент з множини за допомогою команди del
-  // key: ключ множини, який потрібно видалити з бази даних
   // del видаляє весь контент з множини, якщо він є у ній, повертає кількість елементів, які були видалені
+  // key: ключ множини, який потрібно видалити з бази даних
 
   public async sMembers(key: string): Promise<string[]> {
     return await this.redisClient.smembers(key);

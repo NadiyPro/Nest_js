@@ -11,12 +11,14 @@ import { AuthService } from './services/auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @SkipAuth()
   @Post('sign-up')
   public async signUp(@Body() dto: SignUpReqDto): Promise<AuthResDto> {
     return await this.authService.signUp(dto);
   }
   // singUp - тут логінація вконується (перший вхід з хешуванням паролю)
 
+  @SkipAuth()
   @Post('sign-in')
   public async signIn(@Body() dto: SignInReqDto): Promise<AuthResDto> {
     return await this.authService.signIn(dto);

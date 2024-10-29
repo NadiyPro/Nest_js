@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config/dist/config.service';
 
 import { Config, JwtConfig } from '../../../configs/config.type';
 import { RedisService } from '../../redis/services/redis.service';
+import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
+import { UserRepository } from '../../repository/services/user.repository';
 
 @Injectable()
 export class AuthCacheService {
@@ -14,6 +16,8 @@ export class AuthCacheService {
   constructor(
     private readonly redisService: RedisService,
     private readonly configService: ConfigService<Config>,
+    private readonly userRepository: UserRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {
     this.jwtConfig = this.configService.get('jwt');
   } // Зберігає налаштування 'jwt', отримані з configService
@@ -35,6 +39,33 @@ export class AuthCacheService {
     await this.redisService.expire(key, this.jwtConfig.accessExpiresIn);
     // Встановлює час життя ключа (expire), використовуючи налаштування accessExpiresIn із jwtConfig
   }
+  public async isAccessTokenExist(
+    userId: string,
+    deviceId: string,
+    token: string,
+  ): Promise<boolean> {
+    const key = this.getKey(userId, deviceId);
+    // створюємо унікальний ключ для збереження токена в Redis
+    const set = await this.redisService.sMembers(key);
+    // отримується список всіх токенів, пов’язаних із цим ключем.
+    return set.includes(token);
+    // перевіряється, чи містить цей список потрібний token
+    // Повернене значення: true, якщо токен знайдено в списку; інакше false
+  }
+  // перевіряємо, чи існує певний токен доступу в Redis
+
+  public async deleteToken(userId: string, deviceId: string): Promise<void> {
+    const key = this.getKey(userId, deviceId);
+    // створюємо унікальний ключ для збереження токенів в Redis
+    await this.redisService.deleteByKey(key);
+    // видалити всі токени, збережені для цього ключа
+  }
+  // deleteToken видаляє всі токени для певного userId і deviceId.
+
+  private getKey(userId: string, deviceId: string): string {
+    return `ACCESS_TOKEN:${userId}:${deviceId}`;
+  } // створює унікальний ключ для зберігання токенів у Redis
+  // щоб у кожного юзера (userId) на конкретному пристрої (deviceId) був свій унікальний ключ
 }
 // завдяки даному сервісу будемо зберігати токени,
 // а потім віддавати нашому посереднику RedisService, щоб вони зберігались в Redis (кешувати)

@@ -48,6 +48,10 @@ export class UsersController {
   }
 
   @Get(':userId')
+  // динамчний шлях має ОБОВЯЗКОВО бути розташованим ніжче ніж статичні шляхи,
+  // оскільки якщо ми його розмістимо вгорі, то с-ма буде в ':userId'
+  // замість userId підставляти слово "me",
+  // бо читання документа відбувається завжди зверху вниз по порядку
   public async findOne(@Param('userId', ParseUUIDPipe) userId: UserID) {
     return await this.usersService.findOne(userId);
   }

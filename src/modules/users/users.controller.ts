@@ -55,4 +55,9 @@ export class UsersController {
   public async findOne(@Param('userId', ParseUUIDPipe) userId: UserID) {
     return await this.usersService.findOne(userId);
   }
+  // ParseUUIDPipe — це пайп (pipe) в NestJS, який перевіряє,
+  // чи значення параметра відповідає UUID-формату. У цьому випадку,
+  // коли ти викликаєш @Get(':userId'), ParseUUIDPipe перевіряє,
+  // що значення userId є валідним UUID.
+  // Якщо значення не відповідає формату UUID, NestJS автоматично поверне помилку.
 }

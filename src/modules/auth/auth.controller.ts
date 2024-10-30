@@ -24,21 +24,4 @@ export class AuthController {
   public async signIn(@Body() dto: SignInReqDto): Promise<AuthResDto> {
     return await this.authService.signIn(dto);
   }
-  // signIn - тут проходить аутентифікація,
-  // перевірка чи існує в нас такий юзер з таким то паролем,
-  // якщо існує то генеруємо нову пару токенів
-  // (повторний вхід, перевірка паролю, ат видача нової пари токенів)
-
-  // @Post('sign-out')
-  // public async signOut(): Promise<void> {
-  //   return await this.authService.signOut();
-  // }
-
-  // @SkipAuth()
-  // @ApiBearerAuth()
-  // @UseGuards(JwtRefreshGuard)
-  // @Post('refresh')
-  // public async refresh(): Promise<AuthResDto> {
-  //   return await this.authService.refresh();
-  // }
 }

@@ -58,7 +58,7 @@ export class JwtAccessGuard implements CanActivate {
       accessToken,
       TokenType.ACCESS,
     );
-    // //  перевіряємо токен, чи був він створений з використанням
+    // перевіряємо токен, чи був він створений з використанням
     // конкретного секретного ключа і чи не закінчився термін його дії
     if (!payload) {
       throw new UnauthorizedException();

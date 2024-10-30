@@ -13,3 +13,6 @@ export const CurrentUser = createParamDecorator(
 // context.switchToHttp().getRequest() отримує об'єкт request з HTTP-контексту запиту.
 // request.res.locals.user — тут зберігається об’єкт користувача,
 // який зазвичай додається після аутентифікації.
+// ExecutionContext у NestJS — це об'єкт,
+// який містить контекст виконання запиту і дозволяє отримувати або
+// змінювати дані запиту на рівні Guards, Interceptors, і Filters

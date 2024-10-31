@@ -7,10 +7,10 @@ import { UserMapper } from '../../users/services/user.mapper';
 import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
+import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
+import { IUserData } from '../models/interfaces/user-data.interface';
 import { AuthCacheService } from './auth-cache-service';
 import { TokenService } from './token.service';
-import { IUserData } from '../models/interfaces/user-data.interface';
-import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
 
 @Injectable()
 export class AuthService {

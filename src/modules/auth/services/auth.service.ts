@@ -9,6 +9,8 @@ import { SignUpReqDto } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
 import { AuthCacheService } from './auth-cache-service';
 import { TokenService } from './token.service';
+import { IUserData } from '../models/interfaces/user-data.interface';
+import { TokenPairResDto } from '../models/dto/res/token-pair.res.dto';
 
 @Injectable()
 export class AuthService {
@@ -109,6 +111,53 @@ export class AuthService {
     return { user: UserMapper.toResDto(userEntity), tokens };
     // Метод UserMapper.toResDto бере об'єкт user типу UserEntity,
     // отриманий з бази даних, і перетворює його (мапає) на об'єкт UserResDto.
+  }
+
+  public async signOut(userData: IUserData): Promise<void> {
+    await Promise.all([
+      this.authCacheService.deleteToken(userData.userId, userData.deviceId),
+      this.refreshTokenRepository.delete({
+        user_id: userData.userId,
+        deviceId: userData.deviceId,
+      }),
+    ]);
+  }
+
+  public async refresh(userData: IUserData): Promise<TokenPairResDto> {
+    await Promise.all([
+      this.authCacheService.deleteToken(userData.userId, userData.deviceId),
+      // видаляємо всі токени, збережені для цього ключа
+      this.refreshTokenRepository.delete({
+        user_id: userData.userId,
+        deviceId: userData.deviceId,
+      }), // видаляємо всі refreshToken,
+      // що зберігаються в базі даних для конкретного користувача та його пристрою
+    ]);
+
+    const tokens = await this.tokenService.generateAuthTokens({
+      userId: userData.userId,
+      deviceId: userData.deviceId,
+    });
+    // генеруємо пару токенів accessToken і refreshToken на основі userId та deviceId
+    await Promise.all([
+      this.authCacheService.saveToken(
+        tokens.accessToken,
+        userData.userId,
+        userData.deviceId,
+      ),
+      // зберігаємо access токен в кеш (Redis)
+      this.refreshTokenRepository.save(
+        this.refreshTokenRepository.create({
+          user_id: userData.userId,
+          deviceId: userData.deviceId,
+          refreshToken: tokens.refreshToken,
+        }),
+      ), // зберігаємо refreshToken токен в БД
+      // create - створює нову сутність(нового юзера та захешований пароль)
+      // save - зберігає нову створену сутність в БД
+    ]);
+
+    return tokens; // повертаємо пару токенів accessToken і refreshToken
   }
 
   private async isEmailNotExistOrThrow(email: string) {

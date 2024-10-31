@@ -48,6 +48,9 @@ export class UsersController {
   public async removeMe(@CurrentUser() userData: IUserData) {
     return await this.usersService.removeMe(userData);
   }
+  // CurrentUser отримує дані поточного користувача з locals у request
+  // Декоратор CurrentUser дістає збережену інформацію про користувача
+  // (наприклад, його ID та інші поля) і передає ці дані у змінну userData
 
   @Get(':userId')
   // динамчний шлях має ОБОВЯЗКОВО бути розташованим ніжче ніж статичні шляхи,

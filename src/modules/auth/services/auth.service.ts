@@ -121,7 +121,7 @@ export class AuthService {
         deviceId: userData.deviceId,
       }),
     ]);
-    // видляємо по юзеру всі accessToken та refreshToken токени
+    // видаляємо по юзеру всі accessToken та refreshToken токени
   }
 
   public async refresh(userData: IUserData): Promise<TokenPairResDto> {

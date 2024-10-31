@@ -33,12 +33,15 @@ export class AuthController {
   // якщо існує то генеруємо нову пару токенів
   // (повторний вхід, перевірка паролю, ат видача нової пари токенів)
 
-  // @ApiBearerAuth()
-  // @Post('sign-out')
-  // public async signOut(@CurrentUser() userData: IUserData): Promise<void> {
-  //   return await this.authService.signOut(userData);
-  // }
-  //
+  @ApiBearerAuth()
+  @Post('sign-out')
+  public async signOut(@CurrentUser() userData: IUserData): Promise<void> {
+    return await this.authService.signOut(userData);
+  }
+  // хочемо переходячи по даному шляху, видалят токени
+  // які належать конкретному юзеру userData
+  // userData містить в собі userId, deviceId, email
+
   @SkipAuth()
   @ApiBearerAuth()
   @UseGuards(JwtRefreshGuard)
@@ -48,13 +51,18 @@ export class AuthController {
   ): Promise<TokenPairResDto> {
     return await this.authService.refresh(userData);
   }
+  // хочемо отримати нову пару токенів accessToken і refreshToken
+  // перевіряємо чи в нас є юзер з таким паролем, якщо є генеруємо нові токени
+  // видаляємо стару пару токенів
+  // зберігаємо accessToken в кеш (Redis)
+  // зберігаємо refreshToken в БД
 }
 // усі шляхи проходять перевірку через JwtAccessGuard,
 // який встановлено як глобальний guard через APP_GUARD в auth.module.ts.
 // Це означає, що будь-який маршрут у AuthController (і в додатку)
 // за замовчуванням перевірятиметься на наявність дійсного access-токена.
 //
-// В auth.controller.ts навдміну від інших моделей з шляхами (users, article і т.п)
+// В auth.controller.ts навідміну від інших моделей з шляхами (users, article і т.п)
 // ми на шляхи 'sign-up' та 'sign-in', встановили кастомний декоратор @SkipAuth()
 // (створений за допомогою SetMetadata) завдяки чому
 // ми тут можемо пропустити перевірку JwtAccessGuard

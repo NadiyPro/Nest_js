@@ -121,12 +121,13 @@ export class AuthService {
         deviceId: userData.deviceId,
       }),
     ]);
+    // видляємо по юзеру всі accessToken та refreshToken токени
   }
 
   public async refresh(userData: IUserData): Promise<TokenPairResDto> {
     await Promise.all([
       this.authCacheService.deleteToken(userData.userId, userData.deviceId),
-      // видаляємо всі токени, збережені для цього ключа
+      // видаляємо всі accessToken токени, збережені для цього ключа в кеші (Redis)
       this.refreshTokenRepository.delete({
         user_id: userData.userId,
         deviceId: userData.deviceId,

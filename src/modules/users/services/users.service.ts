@@ -1,21 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConflictException, Injectable } from '@nestjs/common';
 
 import { UserID } from '../../../common/types/entity-ids.type';
-import { Config } from '../../../configs/config.type';
 import { UserEntity } from '../../../database/entities/user.entity';
 import { IUserData } from '../../auth/models/interfaces/user-data.interface';
-import { ArticleRepository } from '../../repository/services/article.repository';
+import { FollowRepository } from '../../repository/services/follow.repository';
+import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
 import { UserRepository } from '../../repository/services/user.repository';
 import { UpdateUserReqDto } from '../models/dto/req/update-user.req.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly configService: ConfigService<Config>,
-    private userRepository: UserRepository,
-    private articleRepository: ArticleRepository,
-    private readonly refreshTokenRepository: RefreshTokenRepository
+    // private readonly configService: ConfigService<Config>,
+    private readonly userRepository: UserRepository,
+    private readonly followRepository: FollowRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
   public async findMe(userData: IUserData): Promise<UserEntity> {
@@ -63,8 +62,14 @@ export class UsersService {
   public async follow(userData: IUserData, userId: UserID): Promise<void> {
     if (userData.userId === userId) {
       throw new ConflictException('You cannot follow yourself');
-    }
+    } // Перевірка на спробу підписатися на самого себе
+    // userData.userId (ідентифікатор поточного користувача, що хоче підписатися)
+    // не дорівнює userId (ідентифікатор користувача, на якого хочуть підписатися)
+    // Якщо значення однакові, викликається помилка ConflictException з повідомленням,
+    // оскільки підписка на самого себе не має сенсу
     await this.isUserExistOrThrow(userId);
+    // Метод isUserExistOrThrow перевіряє, чи існує користувач з userId у БД
+    // Якщо користувач з таким userId не існує, викине помилку ConflictException
 
     const follow = await this.followRepository.findOneBy({
       follower_id: userData.userId,
@@ -72,39 +77,53 @@ export class UsersService {
     });
     if (follow) {
       throw new ConflictException('You already follow this user');
-    }
+    } // Перевірка на повторну підписку
+    // Шукаємо запис в БД, де follower_id (ідентифікатор користувача, що хоче підписатися)
+    // і following_id (ідентифікатор користувача, на якого хочуть підписатися) вже існують.
+    // Якщо запис знайдено, це означає, що підписка вже існує,
+    // і кидається помилка ConflictException з повідомленням
+    // ConflictException — це стандартний виняток у NestJS, який використовується для
+    // позначення ситуацій, де виникає конфлікт із поточним станом ресурсів (HTTP-статус 409 (Conflict))
     await this.followRepository.save(
       this.followRepository.create({
         follower_id: userData.userId,
         following_id: userId,
       }),
-    );
-  }
+    ); // create створює новий об'єкт підписки з полями follower_id та following_id в followRepository
+    // потім зберігається в базі даних методом save
+  } // follow призначений для того, щоб користувач міг підписатися на іншого користувача,
+  // якщо він ще не підписаний
 
   public async unfollow(userData: IUserData, userId: UserID): Promise<void> {
     if (userData.userId === userId) {
       throw new ConflictException('You cannot unfollow yourself');
-    }
+    } // Якщо користувач спробує відписатися від самого себе, кидається ConflictException із повідомленням
     await this.isUserExistOrThrow(userId);
+    // Метод isUserExistOrThrow перевіряє, чи існує користувач з userId у БД
+    // Якщо користувач з таким userId не існує, викине помилку ConflictException
     const follow = await this.followRepository.findOneBy({
       follower_id: userData.userId,
       following_id: userId,
     });
     if (!follow) {
       throw new ConflictException('You do not follow this user');
-    }
+    } // // шукаємо в followRepository, який відповідає підписці між поточним користувачем (follower_id) і
+    // користувачем, від якого потрібно відписатися (following_id).
+    // Якщо запису про підписку немає, то кидається ConflictException із повідомленням
     await this.followRepository.delete({
       follower_id: userData.userId,
       following_id: userId,
-    });
-  }
+    }); // Якщо запис знайдено, то метод видаляє його, тим самим припиняючи підписку
+  } // метод unfollow дозволяє користувачеві припинити підписку на іншого користувача,
+  // якщо підписка існує
 
   private async isUserExistOrThrow(userId: UserID): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
       throw new ConflictException('User not found');
     }
-  }
+  } // перевіряє, чи існує користувач із зазначеним userId у базі даних.
+  // Якщо користувача не знайдено, метод викидає виняток ConflictException із повідомленням
 }
 // public async checkAbilityToEditArticle(userId: UserID, articleId: ArticleID) {
 //   // Check if the user has permission to edit the article

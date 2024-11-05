@@ -5,12 +5,14 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
-  Patch, Post,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { UserID } from '../../common/types/entity-ids.type';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { SkipAuth } from '../auth/decorators/skip-auth.decorator';
 import { IUserData } from '../auth/models/interfaces/user-data.interface';
 import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
 import { UserBaseResDto } from './models/dto/res/user-base.res.dto';
@@ -54,6 +56,7 @@ export class UsersController {
   // Декоратор CurrentUser дістає збережену інформацію про користувача
   // (наприклад, його ID та інші поля) і передає ці дані у змінну userData
 
+  @SkipAuth()
   @Get(':userId')
   // динамчний шлях має ОБОВЯЗКОВО бути розташованим ніжче ніж статичні шляхи,
   // оскільки якщо ми його розмістимо вгорі, то с-ма буде в ':userId'

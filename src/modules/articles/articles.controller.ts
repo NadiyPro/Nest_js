@@ -1,17 +1,13 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { ArticleID } from '../../common/types/entity-ids.type';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { IUserData } from '../auth/models/interfaces/user-data.interface';
+import { CreateArticleDto } from './dto/req/create-article.dto';
+import { UpdateArticleDto } from './dto/req/update-article.dto';
+import { ArticleResDto } from './dto/res/article.res.dto';
+import { ArticlesMapper } from './services/articles.mapper';
 import { ArticlesService } from './services/articles.service';
 
 @ApiBearerAuth()
@@ -25,27 +21,29 @@ export class ArticlesController {
   constructor(private readonly usersService: ArticlesService) {}
 
   @Post()
-  create(@Body() dto: CreateArticleDto) {
-    return this.usersService.create(dto);
+  public async create(
+    @CurrentUser() userData: IUserData,
+    @Body() dto: CreateArticleDto,
+  ): Promise<ArticleResDto> {
+    const result = await this.usersService.create(userData, dto);
+    return ArticlesMapper.toResDto(result);
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Get(':articleId')
+  public async findOne(
+    @Param('articleId') articleId: ArticleID,
+  ): Promise<ArticleResDto> {
+    const result = await this.usersService.findOne(articleId);
+    return ArticlesMapper.toResDto(result);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: ArticleID) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: ArticleID, @Body() updateUserDto: UpdateArticleDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: ArticleID) {
-    return this.usersService.remove(+id);
+  @Patch(':articleId')
+  public async update(
+    @CurrentUser() userData: IUserData,
+    @Param('articleId') articleId: ArticleID,
+    @Body() dto: UpdateArticleDto,
+  ): Promise<ArticleResDto> {
+    const result = await this.usersService.update(userData, articleId, dto);
+    return ArticlesMapper.toResDto(result);
   }
 }

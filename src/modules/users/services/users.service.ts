@@ -17,20 +17,84 @@ export class UsersService {
     private articleRepository: ArticleRepository,
   ) {}
 
-  public async findMe(userData: IUserData) {
-    return `This action returns a #${userData.userId} user`;
+  public async findMe(userData: IUserData): Promise<UserEntity> {
+    return await this.userRepository.findOneBy({ id: userData.userId });
   }
 
-  public async updateMe(userData: IUserData, dto: UpdateUserReqDto) {
-    return `This action updates a #${userData.userId} user`;
+  public async updateMe(
+    userData: IUserData,
+    dto: UpdateUserReqDto,
+  ): Promise<UserEntity> {
+    const user = await this.userRepository.findOneBy({ id: userData.userId });
+    // шукаємо користувача в БД за userId
+    this.userRepository.merge(user, dto);
+    // метод merge об’єднує нові дані з dto з поточними даними user.
+    // Цей процес оновлює поля об’єкта user новими значеннями з dto,
+    // змінюючи його стан. Це означає,
+    // що user стає зміненим в пам’яті і одразу готовий для збереження.
+    // тобто, через використання методу merge в нас мутує стан const user
+    // якщо нам треба, щоб стан user залишався тим який він був,
+    // тобто не мутував, то merge використовувати НЕ треба
+    return await this.userRepository.save(user);
+    // Після об’єднання даних оновлений user зберігається в БД за допомогою save
   }
 
-  public async removeMe(userData: IUserData) {
-    return `This action removes a #${userData.userId} user`;
+  public async removeMe(userData: IUserData): Promise<void> {
+    await this.userRepository.update(
+      { id: userData.userId },
+      { deleted: new Date() },
+    );
+    await this.refreshTokenRepository.delete({ user_id: userData.userId });
   }
 
   public async findOne(userId: UserID): Promise<UserEntity> {
     return await this.userRepository.findOneBy({ id: userId });
+  }
+
+  public async follow(userData: IUserData, userId: UserID): Promise<void> {
+    if (userData.userId === userId) {
+      throw new ConflictException('You cannot follow yourself');
+    }
+    await this.isUserExistOrThrow(userId);
+
+    const follow = await this.followRepository.findOneBy({
+      follower_id: userData.userId,
+      following_id: userId,
+    });
+    if (follow) {
+      throw new ConflictException('You already follow this user');
+    }
+    await this.followRepository.save(
+      this.followRepository.create({
+        follower_id: userData.userId,
+        following_id: userId,
+      }),
+    );
+  }
+
+  public async unfollow(userData: IUserData, userId: UserID): Promise<void> {
+    if (userData.userId === userId) {
+      throw new ConflictException('You cannot unfollow yourself');
+    }
+    await this.isUserExistOrThrow(userId);
+    const follow = await this.followRepository.findOneBy({
+      follower_id: userData.userId,
+      following_id: userId,
+    });
+    if (!follow) {
+      throw new ConflictException('You do not follow this user');
+    }
+    await this.followRepository.delete({
+      follower_id: userData.userId,
+      following_id: userId,
+    });
+  }
+
+  private async isUserExistOrThrow(userId: UserID): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new ConflictException('User not found');
+    }
   }
 }
 // public async checkAbilityToEditArticle(userId: UserID, articleId: ArticleID) {
@@ -43,3 +107,8 @@ export class UsersService {
 // редагування певного коментаря який знаходиться під articleId
 //  через findOne, знаходимо в БД пост,
 //  який відповідає articleId та належить користувачу з userId
+//
+// merge — це зручний метод об'єднати нові дані з існуючими,
+// але він змінює стан переданого об’єкта.
+// Тому варто застосовувати його лише тоді,
+// коли ми не проти змінювати оригінальний об’єкт.

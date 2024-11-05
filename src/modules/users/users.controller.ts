@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
-  Patch,
+  Patch, Post,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -31,7 +31,8 @@ export class UsersController {
   // додає інформацію до документації Swagger
   @Get('me')
   public async findMe(@CurrentUser() userData: IUserData) {
-    return await this.usersService.findMe(userData);
+    const result = await this.usersService.findMe(userData);
+    return UserMapper.toResDto(result);
   }
 
   @ApiBearerAuth()
@@ -40,7 +41,8 @@ export class UsersController {
     @CurrentUser() userData: IUserData,
     @Body() updateUserDto: UpdateUserReqDto,
   ) {
-    return await this.usersService.updateMe(userData, updateUserDto);
+    const result = await this.usersService.updateMe(userData, updateUserDto);
+    return UserMapper.toResDto(result);
   }
 
   @ApiBearerAuth()
@@ -62,6 +64,24 @@ export class UsersController {
   ): Promise<UserBaseResDto> {
     const result = await this.usersService.findOne(userId);
     return UserMapper.toResDto(result);
+  }
+
+  @ApiBearerAuth()
+  @Post(':userId/follow')
+  public async follow(
+    @Param('userId', ParseUUIDPipe) userId: UserID,
+    @CurrentUser() userData: IUserData,
+  ): Promise<void> {
+    await this.usersService.follow(userData, userId);
+  }
+
+  @ApiBearerAuth()
+  @Delete(':userId/follow')
+  public async unfollow(
+    @Param('userId', ParseUUIDPipe) userId: UserID,
+    @CurrentUser() userData: IUserData,
+  ): Promise<void> {
+    await this.usersService.unfollow(userData, userId);
   }
 }
 // типи Pipes в NestJS

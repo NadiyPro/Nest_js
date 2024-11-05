@@ -48,6 +48,11 @@ export class UserEntity extends CreateUpdateModel {
   // що НЕ зберігається в базі даних, але результат якої розраховується під час запиту
   // CONCAT(firstName, lastName) об'єднує два рядки (ім'я та прізвище)  по id = id
 
+  @Column('timestamp', { nullable: true })
+  deleted?: Date;
+  // timestamp вказує на тип даних колонки. Це означає,
+  // що вона зберігає дату і час. У більшості баз даних формат timestamp дозволяє
+  // записувати як дату, так і точний час (наприклад, 2024-11-05 10:20:45).
   @OneToMany(() => RefreshTokenEntity, (entity) => entity.user)
   refreshTokens?: RefreshTokenEntity[];
   // Виконуємо зв'язку Багато-до-одного/один-до-багатьох

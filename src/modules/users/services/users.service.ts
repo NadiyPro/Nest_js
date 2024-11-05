@@ -15,6 +15,7 @@ export class UsersService {
     private readonly configService: ConfigService<Config>,
     private userRepository: UserRepository,
     private articleRepository: ArticleRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository
   ) {}
 
   public async findMe(userData: IUserData): Promise<UserEntity> {
@@ -40,11 +41,19 @@ export class UsersService {
   }
 
   public async removeMe(userData: IUserData): Promise<void> {
+    // userData містить дані користувача, який хоче "видалити" свій обліковий запис
     await this.userRepository.update(
       { id: userData.userId },
+      // шукає запис користувача за ідентифікатором userData.userId
       { deleted: new Date() },
+      // встановлює поточну дату та час у поле deleted. Це мітка про "видалення",
+      // яка позначає, коли обліковий запис був "видалений".
+      // Це не фізичне видалення, а скоріше позначка,
+      // що користувач неактивний або "видалений".
+      // Вся інформація про користувача залишається в базі, і її можна легко відновити.
     );
     await this.refreshTokenRepository.delete({ user_id: userData.userId });
+    // видаляє всі токени оновлення (refresh tokens), пов'язані з користувачем
   }
 
   public async findOne(userId: UserID): Promise<UserEntity> {

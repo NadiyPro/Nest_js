@@ -7,6 +7,12 @@ export class ArticleResDto {
     example: '796cea24-a328-4463-a5e1-85a779e4780f',
     description: 'Article ID',
   })
+  // @ApiProperty — це декоратор, який використовується для документування
+  // властивостей моделі у Swagger
+  // Параметр example у @ApiProperty задає зразок значення для властивості.
+  // Swagger використовує це значення як приклад, щоб продемонструвати,
+  // як може виглядати реальна відповідь або запит.
+  // description додає текстовий опис поруч із кожною властивістю в Swagger UI
   id: string;
 
   @ApiProperty({

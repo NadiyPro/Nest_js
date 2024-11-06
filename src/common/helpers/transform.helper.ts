@@ -12,15 +12,23 @@ export class TransformHelper {
 
   public static trimArray({ value }) {
     return Array.isArray(value) ? value.map((item) => item.trim()) : value;
-  }
+  } // якщо нам приходить масив, то ми його перебираємо і крізь прибираємо пробіли
 
   public static uniqueItems({ value }) {
     return value ? Array.from(new Set(value)) : value;
-  }
+  } // видаляє дублікати з масиву
+  // Приймає параметр { value }, який очікується як масив
+  // Якщо value існує тоді:
+  // Set(value) створює новий набір (Set), видаляючи дублікати з value
+  // Array.from(...) конвертує цей набір знову в масив
+  // Якщо value не існує, метод просто повертає його таким, яким він є
 
   public static toLowerCaseArray({ value }) {
     return Array.isArray(value)
       ? value.map((item) => item.toLowerCase())
       : value;
-  }
+  } // toLowerCaseArray приймає об'єкт із полем value.
+  // Якщо value — масив, він перетворює всі його елементи на нижній регістр
+  // і повертає змінений масив. Якщо value не масив,
+  // метод повертає value без змін
 }

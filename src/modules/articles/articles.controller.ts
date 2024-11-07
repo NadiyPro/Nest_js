@@ -27,7 +27,8 @@ export class ArticlesController {
   ): Promise<ArticleResDto> {
     const result = await this.articlesService.create(userData, dto);
     return ArticlesMapper.toResDto(result);
-  }
+  } // створюэмо пост з тегом згідно моделі CreateArticleDto та
+  // завдяки декоратору @CurrentUser() витягаємо дані по юзру, що створив цей пост
 
   @Get(':articleId')
   public async findOne(

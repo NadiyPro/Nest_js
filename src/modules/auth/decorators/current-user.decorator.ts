@@ -6,6 +6,13 @@ export const CurrentUser = createParamDecorator(
     return request.res.locals.user;
   },
 );
+// декоратор CurrentUser, який можна використовувати для простого доступу до
+// поточного користувача, збереженого в locals об'єкта response (res.locals.user).
+// Декоратор бере користувача з request.res.locals.user та повертає його у
+// відповідний контролер.
+// Таким чином, замість передачі користувача вручну у кожен метод контролера,
+// ви можете додати @CurrentUser() як параметр, і він автоматично підставить
+// поточного користувача з locals.
 // CurrentUser — це декоратор параметра,
 // створений за допомогою функції createParamDecorator.
 // createParamDecorator дозволяє створити користувацький декоратор,

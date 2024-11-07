@@ -23,12 +23,14 @@ export class ArticlesService {
   ): Promise<ArticleEntity> {
     const tags = await this.createTags(dto.tags);
     //  метод createTags для створення нових тегів (якщо їх ще немає в БД).
+    // сохраняем в табл по тегам tagRepository
 
     return await this.articleRepository.save(
       this.articleRepository.create({ ...dto, tags, user_id: userData.userId }),
     );
-  } // для збереження нової статті в базі, передаючи dto та список тегів,
-  // прив'язаних до статті
+  } // для збереження нового посту в базі, передаючи dto та список тегів,
+  // прив'язаних до посту, тобто зберігаємо новий пост з відповідним тегом в табл по постам
+  // тобто в articleRepository
 
   public async findOne(articleId: ArticleID): Promise<ArticleEntity> {
     return {} as any;

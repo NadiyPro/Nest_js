@@ -72,8 +72,8 @@ export class UsersService {
     // Якщо користувач з таким userId не існує, викине помилку ConflictException
 
     const follow = await this.followRepository.findOneBy({
-      follower_id: userData.userId,
-      following_id: userId,
+      follower_id: userData.userId, // той хто підписується
+      following_id: userId, // на кого підписується
     });
     if (follow) {
       throw new ConflictException('You already follow this user');
@@ -86,8 +86,8 @@ export class UsersService {
     // позначення ситуацій, де виникає конфлікт із поточним станом ресурсів (HTTP-статус 409 (Conflict))
     await this.followRepository.save(
       this.followRepository.create({
-        follower_id: userData.userId,
-        following_id: userId,
+        follower_id: userData.userId, // той хто підписується
+        following_id: userId, // той на кого підписується
       }),
     ); // create створює новий об'єкт підписки з полями follower_id та following_id в followRepository
     // потім зберігається в базі даних методом save

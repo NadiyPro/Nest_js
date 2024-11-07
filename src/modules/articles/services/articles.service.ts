@@ -22,7 +22,7 @@ export class ArticlesService {
     dto: CreateArticleDto, // Дані для створення статті
   ): Promise<ArticleEntity> {
     const tags = await this.createTags(dto.tags);
-    //  метод createTags для створення нових тегів (якщо їх ще немає в БД).
+    // метод createTags для створення нових тегів (якщо їх ще немає в БД).
     // сохраняем в табл по тегам tagRepository
 
     return await this.articleRepository.save(
@@ -42,7 +42,7 @@ export class ArticlesService {
     updateUserDto: UpdateArticleDto,
   ): Promise<ArticleEntity> {
     return {} as any;
-  } // Метод для оновлення статт
+  } // Метод для оновлення посту
 
   private async createTags(tags: string[]): Promise<TagEntity[]> {
     if (!tags || !tags.length) return [];

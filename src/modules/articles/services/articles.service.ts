@@ -9,6 +9,7 @@ import { ArticleRepository } from '../../repository/services/article.repository'
 import { TagRepository } from '../../repository/services/tag.repository';
 import { CreateArticleDto } from '../dto/req/create-article.dto';
 import { UpdateArticleDto } from '../dto/req/update-article.dto';
+import { ListArticleQueryDto } from '../dto/req/list-article-query.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -31,6 +32,13 @@ export class ArticlesService {
   } // для збереження нового посту в базі, передаючи dto та список тегів,
   // прив'язаних до посту, тобто зберігаємо новий пост з відповідним тегом в табл по постам
   // тобто в articleRepository
+
+  public async findAll(
+    userData: IUserData,
+    query: ListArticleQueryDto,
+  ): Promise<[ArticleEntity[], number]> {
+    return await this.articleRepository.findAll(userData, query);
+  }
 
   public async findOne(articleId: ArticleID): Promise<ArticleEntity> {
     return {} as any;

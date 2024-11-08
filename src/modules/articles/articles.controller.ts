@@ -1,12 +1,22 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { ArticleID } from '../../common/types/entity-ids.type';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { IUserData } from '../auth/models/interfaces/user-data.interface';
 import { CreateArticleDto } from './dto/req/create-article.dto';
+import { ListArticleQueryDto } from './dto/req/list-article-query.dto';
 import { UpdateArticleDto } from './dto/req/update-article.dto';
 import { ArticleResDto } from './dto/res/article.res.dto';
+import { ArticleListResDto } from './dto/res/article-list.res.dto';
 import { ArticlesMapper } from './services/articles.mapper';
 import { ArticlesService } from './services/articles.service';
 
@@ -29,6 +39,18 @@ export class ArticlesController {
     return ArticlesMapper.toResDto(result);
   } // створюэмо пост з тегом згідно моделі CreateArticleDto та
   // завдяки декоратору @CurrentUser() витягаємо дані по юзру, що створив цей пост
+
+  @Get()
+  public async findAll(
+    @CurrentUser() userData: IUserData,
+    @Query() query: ListArticleQueryDto,
+  ): Promise<ArticleListResDto> {
+    const [entities, total] = await this.articlesService.findAll(
+      userData,
+      query,
+    );
+    return ArticlesMapper.toResDtoList(entities, total, query);
+  }
 
   @Get(':articleId')
   public async findOne(

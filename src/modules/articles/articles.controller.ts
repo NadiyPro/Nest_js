@@ -43,14 +43,21 @@ export class ArticlesController {
   @Get()
   public async findAll(
     @CurrentUser() userData: IUserData,
+    // // витягаємо інфо про поточного користувача від якого робиться запит
     @Query() query: ListArticleQueryDto,
+    // дозволяє отримувати параметри запиту з URL, наприклад, ?page=1&limit=10
+    // витягаємо дані з запиту (кількість постів, теги, порядок сортування)
   ): Promise<ArticleListResDto> {
     const [entities, total] = await this.articlesService.findAll(
       userData,
       query,
     );
+    // entities — список знайдених статей
+    // total — загальна кількість статей,
+    // що відповідають умовам запиту (використовується для пагінації)
     return ArticlesMapper.toResDtoList(entities, total, query);
-  }
+    // перетворюємо дані з entities, total та query у структуру ArticleListResDto
+  } // отримуємо всі пости зазначеного юзера
 
   @Get(':articleId')
   public async findOne(

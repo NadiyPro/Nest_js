@@ -8,8 +8,8 @@ import { IUserData } from '../../auth/models/interfaces/user-data.interface';
 import { ArticleRepository } from '../../repository/services/article.repository';
 import { TagRepository } from '../../repository/services/tag.repository';
 import { CreateArticleDto } from '../dto/req/create-article.dto';
-import { UpdateArticleDto } from '../dto/req/update-article.dto';
 import { ListArticleQueryDto } from '../dto/req/list-article-query.dto';
+import { UpdateArticleDto } from '../dto/req/update-article.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -38,7 +38,7 @@ export class ArticlesService {
     query: ListArticleQueryDto,
   ): Promise<[ArticleEntity[], number]> {
     return await this.articleRepository.findAll(userData, query);
-  }
+  } // повертаємо масив в якому буде міститись масив статей та їх кількість [ArticleEntity[], number]
 
   public async findOne(articleId: ArticleID): Promise<ArticleEntity> {
     return {} as any;

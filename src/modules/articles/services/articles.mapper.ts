@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { ArticleEntity } from '../../../database/entities/article.entity';
 import { UserMapper } from '../../users/services/user.mapper';
-import { ArticleResDto } from '../dto/res/article.res.dto';
 import { ListArticleQueryDto } from '../dto/req/list-article-query.dto';
+import { ArticleResDto } from '../dto/res/article.res.dto';
 import { ArticleListResDto } from '../dto/res/article-list.res.dto';
 
 @Injectable()
@@ -14,7 +14,8 @@ export class ArticlesMapper {
     query: ListArticleQueryDto,
   ): ArticleListResDto {
     return { data: data.map(this.toResDto), total, ...query };
-  }
+  } // повертаємо масив постів, в форматі this.toResDto,
+  // кількість постів, поля query передані в моделі (limit, offset, tag, search)
 
   public static toResDto(data: ArticleEntity): ArticleResDto {
     return {

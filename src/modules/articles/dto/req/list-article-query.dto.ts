@@ -22,10 +22,12 @@ export class ListArticleQueryDto {
   @IsString()
   @IsOptional()
   tag?: string;
+  // тег
 
   @Transform(TransformHelper.trim)
   @Transform(TransformHelper.toLowerCase)
   @IsString()
   @IsOptional()
   search?: string;
+  // пошук по title / description
 }

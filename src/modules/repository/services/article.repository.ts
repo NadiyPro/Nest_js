@@ -38,8 +38,12 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // Наприклад, tag.name може посилатися на поле імені тега.
     // 'tag' в контексті qb.leftJoinAndSelect('article.tags', 'tag') виглядатиме так,
     // як основна таблиця tags, але зі всіма тегами, які пов’язані з
-    // конкретною статтею через проміжну таблицю article_tags.
+    // конкретною статтею через проміжну таблицю article_tags
+    // (тобто, так як в нас звязок @ManyToMany і ми leftJoinAndSelect (підвязуємо всі поля з табл тегів),
+    // то в нас будується проміжна табл в якій буде article_id, tag_id, tag_name)
     // Це дозволяє отримувати всі теги, що відносяться до статті.
+    //*якби я тут не використовувала leftJoinAndSelect то звязок @ManyToMany,
+    //*побудував проміжну табл до якої в нас немає доступу з article_id, tag_id
     qb.leftJoinAndSelect('article.user', 'user');
     //  Виконує ліве з'єднання з таблицею користувачів (user),
     //  що дозволяє додати інформацію про автора статті до результатів

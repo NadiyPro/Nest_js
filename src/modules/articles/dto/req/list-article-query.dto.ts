@@ -10,12 +10,14 @@ export class ListArticleQueryDto {
   @Min(1)
   @IsOptional()
   limit?: number = 10;
+  // ліміт відображення
 
   @Type(() => Number)
   @IsInt()
   @Min(0)
   @IsOptional()
   offset?: number = 0;
+  // скільки пропустити skip
 
   @IsString()
   @IsOptional()

@@ -12,8 +12,11 @@ export class TagMapper {
   public static toResDto(data: TagEntity): TagResDto {
     return {
       id: data.id,
+      // ідентифікатор тегу
       name: data.name,
+      // назва тегу
       articleCount: data['articleCount'] || 0,
+      // кількість постів повязаних з тегом
     };
   }
 }

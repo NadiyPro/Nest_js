@@ -9,5 +9,6 @@ export class TagService {
 
   public async getPopular(): Promise<TagEntity[]> {
     return await this.tagRepository.getPopular();
-  }
+  } // дістаємо пости з найпопулярнішими тегами
+  // (тобто пости, яких найбільше за кількістю, вважаються найпопулярнішими)
 }

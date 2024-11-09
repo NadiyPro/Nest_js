@@ -30,8 +30,7 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // createQueryBuilder('article') — створює запит, де article є псевдонімом таблиці ArticleEntity
     qb.leftJoinAndSelect('article.tags', 'tag');
     // leftJoinAndSelect: Виконує LEFT JOIN між таблицею article та пов’язаною таблицею тегів
-    // (які зберігаються у полі tags)
-    // AndSelect означає, що вибираються всі поля з пов'язаної таблиці tags.
+    // AndSelect означає, що вибираються та повертатимо всі поля з пов'язаної таблиці tags.
     // 'article.tags': Це вказує на те, що поле tags знаходиться у таблиці article
     // Це поле зазвичай представляє зв'язок між статтями і тегами.
     // 'tag': Це псевдонім для сутності тегів, який дозволяє звертатися до полів з таблиці tags у запиті.

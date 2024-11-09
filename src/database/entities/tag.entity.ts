@@ -4,6 +4,7 @@ import {
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
+  VirtualColumn,
 } from 'typeorm';
 
 import { TagID } from '../../common/types/entity-ids.type';
@@ -26,6 +27,9 @@ export class TagEntity extends CreateUpdateModel {
   // при цьому багато Many тегів можуть відноситися до одного посту
   // виходить відношення багато до багатьох
   // (пости/теги наприклад ті що в інстаграм / фб і т.п)
+
+  @VirtualColumn({ query: () => 'NULL' })
+  articleCount?: number;
 }
 // @OneToOne(() =>):
 // тут ми завдяки  @JoinColumn створюємо колонку, яка буде містити зовнішній ключ foreign key

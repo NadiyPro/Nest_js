@@ -16,5 +16,6 @@ export class TagController {
   public async getPopular(): Promise<TagResDto[]> {
     const result = await this.tagService.getPopular();
     return TagMapper.toResListDto(result);
-  }
+  } // дістаємо пости з найпопулярнішими тегами
+  // (тобто пости, яких найбільше за кількістю, вважаються найпопулярнішими)
 }

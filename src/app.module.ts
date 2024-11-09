@@ -12,6 +12,7 @@ import { PostgresModule } from './modules/postgres/postgres.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { RepositoryModule } from './modules/repository/repository.module';
 import { UsersModule } from './modules/users/users.module';
+import { TagModule } from './modules/tag/tag.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { UsersModule } from './modules/users/users.module';
     ArticlesModule,
     UsersModule,
     CommentsModule,
+    TagModule,
   ],
   providers: [
     {

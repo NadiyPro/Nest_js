@@ -30,7 +30,14 @@ export class ArticlesService {
       this.articleRepository.create({ ...dto, tags, user_id: userData.userId }),
     );
   } // для збереження нового посту в базі, передаючи dto та список тегів,
-  // прив'язаних до посту, тобто зберігаємо новий пост з відповідним тегом в табл по постам
+  // прив'язаних до посту, тобто зберігаємо новий пост
+  // з колонкою userId (створеноюю в результаті звязки) та
+  // у цьому випадку tags повертається, щоб
+  // встановити зв'язок між статтею (article) і тегами (tags),
+  // а не для того, щоб зберігати їх як окрему колонку в таблиці articles.
+  // Це пояснюється принципом нормалізації даних у реляційних базах даних,
+  // де теги зберігаються окремо, і зв'язок між статтями та тегами здійснюється
+  // за допомогою проміжної таблиці (багато-до-багатьох зв’язок)
   // тобто в articleRepository
 
   public async findAll(
@@ -38,7 +45,8 @@ export class ArticlesService {
     query: ListArticleQueryDto,
   ): Promise<[ArticleEntity[], number]> {
     return await this.articleRepository.findAll(userData, query);
-  } // повертаємо масив в якому буде міститись масив статей та їх кількість [ArticleEntity[], number]
+  } // повертаємо масив в якому буде міститись масив статей та
+  // їх кількість [ArticleEntity[], number]
 
   public async findOne(articleId: ArticleID): Promise<ArticleEntity> {
     return {} as any;

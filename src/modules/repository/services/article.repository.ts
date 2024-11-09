@@ -13,6 +13,8 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     super(ArticleEntity, dataSource.manager);
   } // super() ініціалізує батьківський клас (Repository<ArticleEntity>) з параметрами:
   // ArticleEntity — сутність, з якою працює цей репозиторій.
+  // DataSource - це клас, через який TypeORM виконує запити до бази,
+  // керує транзакціями та забезпечує доступ до Repository і EntityManager.
   // dataSource.manager — це менеджер БД ("помічник") від TypeORM, який знає,
   // як спілкуватися з базою даних, і ми використовуємо його для роботи з ArticleEntity
   // (дозволяє використовувати всі методи create/findAll/findOne/update/remove/delete і т.п)
@@ -23,7 +25,9 @@ export class ArticleRepository extends Repository<ArticleEntity> {
   ): Promise<[ArticleEntity[], number]> {
     const qb = this.createQueryBuilder('article');
     // createQueryBuilder - це метод у TypeORM використовується для побудови складних SQL-запитів
-    // createQueryBuilder('article') — Створює запит, де article є псевдонімом таблиці ArticleEntity
+    // createQueryBuilder на основі ArticleRepository, який успадковує Repository<ArticleEntity>,
+    // TypeORM розуміє, що цей QueryBuilder прив’язаний до сутності ArticleEntity, тобто
+    // createQueryBuilder('article') — створює запит, де article є псевдонімом таблиці ArticleEntity
     qb.leftJoinAndSelect('article.tags', 'tag');
     // leftJoinAndSelect: Виконує LEFT JOIN між таблицею article та пов’язаною таблицею тегів
     // (які зберігаються у полі tags)
@@ -32,6 +36,10 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // Це поле зазвичай представляє зв'язок між статтями і тегами.
     // 'tag': Це псевдонім для сутності тегів, який дозволяє звертатися до полів з таблиці tags у запиті.
     // Наприклад, tag.name може посилатися на поле імені тега.
+    // 'tag' в контексті qb.leftJoinAndSelect('article.tags', 'tag') виглядатиме так,
+    // як основна таблиця tags, але зі всіма тегами, які пов’язані з
+    // конкретною статтею через проміжну таблицю article_tags.
+    // Це дозволяє отримувати всі теги, що відносяться до статті.
     qb.leftJoinAndSelect('article.user', 'user');
     //  Виконує ліве з'єднання з таблицею користувачів (user),
     //  що дозволяє додати інформацію про автора статті до результатів

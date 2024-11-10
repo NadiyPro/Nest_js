@@ -70,7 +70,7 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<void> {
     await this.usersService.uploadAvatar(userData, file);
-  } // завантажуємо автар (згідно наших .enw на MinIO)
+  } // завантажуємо аватар (згідно наших .enw на MinIO)
 
   @ApiBearerAuth()
   @Delete('me/avatar')

@@ -48,8 +48,10 @@ export class FileStorageService {
           Body: file.buffer,
           ContentType: file.mimetype,
           ACL: 'public-read',
+          // але краще тут теж було прописати через this.awsConfig.ACL
         }),
       );
+
       return filePath;
     } catch (error) {
       this.logger.error(error);

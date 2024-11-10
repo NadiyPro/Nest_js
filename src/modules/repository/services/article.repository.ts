@@ -113,14 +113,19 @@ export class ArticleRepository extends Repository<ArticleEntity> {
   ): Promise<ArticleEntity> {
     const qb = this.createQueryBuilder('article');
     qb.leftJoinAndSelect('article.tags', 'tag');
+    // додає всі теги, пов'язані зі статтею
     qb.leftJoinAndSelect('article.user', 'user');
+    // додає інформацію про користувача, який є автором статті
     qb.leftJoinAndSelect(
       'user.followings',
       'following',
       'following.follower_id = :userId',
       { userId: userData.userId },
     );
+    // приєднує таблицю підписок для автора статті, щоб перевірити,
+    // чи автор є в підписках користувача userData
     qb.where('article.id = :articleId', { articleId });
+    // фільтрує статтю за її унікальним articleId, щоб отримати лише один запис
     return await qb.getOne();
   } // використовується для отримання конкретної статті за її ідентифікатором articleId,
   // додатково зберігаючи інформацію про теги, автора, а також перевіряючи,

@@ -68,13 +68,16 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('avatar'))
   // підключає інтерсептор FileInterceptor для обробки файлу,
   // який надходить із полем avatar із swagger
-  // FileInterceptor (з бібліотеки @nestjs/platform-express)
-  // зчитує файл з запиту і додає його у властивість file у функцію
+  // FileInterceptor (з бібліотеки @nestjs/platform-express) зчитує файл з запиту
+  // (які у файлу fieldname (у нас — avatar), mimetype, buffer, size та ін)
+  // і додає його всі дані (властивості) file у функцію, і вже з uploadAvatar
+  // ми передаємо в usersService, де перевіряємо в fileStorageService та
+  // зберігаємо оновлені дані по юзеру в БД з аватаром
   @ApiFile('avatar', false, true)
   //  налаштовує Swagger-документацію,
   //  щоб вказати, що в запиті є файл з полем avata
   // @ApiFile - наш кастомний декоратор для ...
-  // avatar - ключ
+  // avatar - ключ (назва поля з якого нам надходить файл)
   // false - передаємо інфо на обробку, що це не масив
   // true - вказуємо що ключ є обовязковим
   @Post('me/avatar')

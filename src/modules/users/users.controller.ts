@@ -61,16 +61,34 @@ export class UsersController {
   // (наприклад, його ID та інші поля) і передає ці дані у змінну userData
 
   @ApiBearerAuth()
+  // вказує, що для цього маршруту потрібна аутентифікація через Bearer-токен
   @ApiConsumes('multipart/form-data')
+  // зазначає, що цей маршрут очікує дані у форматі multipart/form-data,
+  // який використовується для передачі файлів
   @UseInterceptors(FileInterceptor('avatar'))
+  // підключає інтерсептор FileInterceptor для обробки файлу,
+  // який надходить із полем avatar із swagger
+  // FileInterceptor (з бібліотеки @nestjs/platform-express)
+  // зчитує файл з запиту і додає його у властивість file у функцію
   @ApiFile('avatar', false, true)
+  //  налаштовує Swagger-документацію,
+  //  щоб вказати, що в запиті є файл з полем avata
+  // @ApiFile - наш кастомний декоратор для ...
+  // avatar - ключ
+  // false - передаємо інфо на обробку, що це не масив
+  // true - вказуємо що ключ є обовязковим
   @Post('me/avatar')
   public async uploadAvatar(
     @CurrentUser() userData: IUserData,
+    // витягаємо інфо про поточного користувача від якого робиться запит
     @UploadedFile() file: Express.Multer.File,
+    // вказує, що файл передається як параметр file у метод.
+    // Тип Express.Multer.File вказує, що це файл,
+    // оброблений за допомогою Multer
   ): Promise<void> {
     await this.usersService.uploadAvatar(userData, file);
-  } // завантажуємо аватар (згідно наших .enw на MinIO)
+  } // завантажуємо аватар для поточного користувача (згідно наших .enw на MinIO),
+  // з використанням інтерсептора для обробки файлу, що надійшов
 
   @ApiBearerAuth()
   @Delete('me/avatar')

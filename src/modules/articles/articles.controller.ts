@@ -43,7 +43,7 @@ export class ArticlesController {
   @Get()
   public async findAll(
     @CurrentUser() userData: IUserData,
-    // // витягаємо інфо про поточного користувача від якого робиться запит
+    // витягаємо інфо про поточного користувача від якого робиться запит
     @Query() query: ListArticleQueryDto,
     // дозволяє отримувати параметри запиту з URL, наприклад, ?page=1&limit=10
     // витягаємо дані з запиту (кількість постів, теги, порядок сортування)

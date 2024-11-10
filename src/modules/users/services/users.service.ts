@@ -111,21 +111,25 @@ export class UsersService {
     if (follow) {
       throw new ConflictException('You already follow this user');
     } // Перевірка на повторну підписку
-    // Шукаємо запис в БД, де follower_id (ідентифікатор користувача, що хоче підписатися)
-    // і following_id (ідентифікатор користувача, на якого хочуть підписатися) вже існують.
+    // Шукаємо запис в БД, де follower_id
+    // (ідентифікатор користувача, що хоче підписатися)
+    // і following_id (ідентифікатор користувача,
+    // на якого хочуть підписатися) вже існують.
     // Якщо запис знайдено, це означає, що підписка вже існує,
     // і кидається помилка ConflictException з повідомленням
     // ConflictException — це стандартний виняток у NestJS, який використовується для
-    // позначення ситуацій, де виникає конфлікт із поточним станом ресурсів (HTTP-статус 409 (Conflict))
+    // позначення ситуацій, де виникає конфлікт із
+    // поточним станом ресурсів (HTTP-статус 409 (Conflict))
     await this.followRepository.save(
       this.followRepository.create({
         follower_id: userData.userId, // той хто підписується
         following_id: userId, // той на кого підписується
       }),
-    ); // create створює новий об'єкт підписки з полями follower_id та following_id в followRepository
+    ); // create створює новий об'єкт підписки з полями follower_id та
+    // following_id в followRepository
     // потім зберігається в базі даних методом save
-  } // follow призначений для того, щоб користувач міг підписатися на іншого користувача,
-  // якщо він ще не підписаний
+  } // follow призначений для того,
+  // щоб користувач міг підписатися на іншого користувача, якщо він ще не підписаний
 
   public async unfollow(userData: IUserData, userId: UserID): Promise<void> {
     if (userData.userId === userId) {

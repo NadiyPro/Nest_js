@@ -52,10 +52,20 @@ export class ArticleRepository extends Repository<ArticleEntity> {
       'following',
       'following.follower_id = :userId',
       { userId: userData.userId },
-    ); // тут ми звертаємось до таблиці, яку у попередній строчці кода назвали "user"
+    ); // в результаті, тут отримуємо тільки тих юзерів, на яких підписаний конкретний користувач
+    // (ідентифікатор якого передається через userData.userId)
+    //leftJoinAndSelect виконує LEFT JOIN між таблицею користувачів (user) і таблицею,
+    // яка містить їх підписки (followings). Завдякив використаню саме leftJoinAndSelect,
+    // всі дані з пов'язаної таблиці followings будуть доступні в результаті
+    // тут ми звертаємось до таблиці, яку у попередній строчці кода назвали "user",
+    // тому прописуємо звернення 'user.followings'
+    // тобто, 'user.followings' - звернення до зв'язку followings в таблиці user,
+    // який представляє список користувачів, на яких підписаний user
     //'following.follower_id = :userId' це додаткова умова, щоб зробити вибірку трохи вужчою,
-    // тобто ми хочемо додавати у вибірку лише тих юзерів у кого id = моєму id
+    // тобто ми хочемо додавати у вибірку лише тих юзерів
+    // у кого follower_id = моєму id (userData.userId)
     // таким чином ми витягнемо всіх юзерів на кого я підписана
+    // { userId: userData.userId }: задає значення параметру userId, який використовується в умові ON
 
     if (query.search) {
       qb.andWhere('CONCAT(article.title, article.description) ILIKE :search');
@@ -92,7 +102,8 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // де skip дозволяє визначити, з якого запису починати вибірк
 
     return await qb.getManyAndCount();
-    // повертає результат у вигляді масиву в якому буде міститись масив статей
+    // повертає результат у вигляді масиву в якому буде міститись масив постів на авторів яких ми підписані
+    // тобто, на яких підписаний конкретний користувач (ідентифікатор якого передається через userData.userId)
     // та їх кількість [ArticleEntity[], number]
   }
 
@@ -111,5 +122,7 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     );
     qb.where('article.id = :articleId', { articleId });
     return await qb.getOne();
-  } //
+  } // використовується для отримання конкретної статті за її ідентифікатором articleId,
+  // додатково зберігаючи інформацію про теги, автора, а також перевіряючи,
+  // чи автор статті є серед підписок користувача userData
 }

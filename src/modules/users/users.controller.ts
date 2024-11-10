@@ -7,8 +7,11 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { UserID } from '../../common/types/entity-ids.type';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -18,6 +21,7 @@ import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
 import { UserBaseResDto } from './models/dto/res/user-base.res.dto';
 import { UserMapper } from './services/user.mapper';
 import { UsersService } from './services/users.service';
+import { ApiFile } from '../../common/decorators/api-file.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -55,6 +59,18 @@ export class UsersController {
   // CurrentUser отримує дані поточного користувача з locals у request
   // Декоратор CurrentUser дістає збережену інформацію про користувача
   // (наприклад, його ID та інші поля) і передає ці дані у змінну userData
+
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiFile('avatar', false, true)
+  @Post('me/avatar')
+  public async uploadAvatar(
+    @CurrentUser() userData: IUserData,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<void> {
+    await this.usersService.uploadAvatar(userData, file);
+  }
 
   @SkipAuth()
   @Get(':userId')

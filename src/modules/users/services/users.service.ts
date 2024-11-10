@@ -55,6 +55,30 @@ export class UsersService {
     // видаляє всі токени оновлення (refresh tokens), пов'язані з користувачем
   }
 
+  public async uploadAvatar(
+    userData: IUserData,
+    file: Express.Multer.File,
+  ): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id: userData.userId });
+    const pathToFile = await this.fileStorageService.uploadFile(
+      file,
+      ContentType.IMAGE,
+      userData.userId,
+    );
+    if (user.image) {
+      await this.fileStorageService.deleteFile(user.image);
+    }
+    await this.userRepository.save({ ...user, image: pathToFile });
+  }
+
+  public async deleteAvatar(userData: IUserData): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id: userData.userId });
+    if (user.image) {
+      await this.fileStorageService.deleteFile(user.image);
+      await this.userRepository.save({ ...user, image: null });
+    }
+  }
+
   public async findOne(userId: UserID): Promise<UserEntity> {
     return await this.userRepository.findOneBy({ id: userId });
   }

@@ -57,7 +57,8 @@ export class ArticlesController {
     // що відповідають умовам запиту (використовується для пагінації)
     return ArticlesMapper.toResDtoList(entities, total, query);
     // перетворюємо дані з entities, total та query у структуру ArticleListResDto
-  } // отримуємо всі пости зазначеного юзера
+  } // отримуємо всі пости зазначеного юзера та
+  // статус є підписка на автора посту чи ні isFollowed (true/false)
 
   @Get(':articleId')
   public async findOne(
@@ -66,7 +67,7 @@ export class ArticlesController {
   ): Promise<ArticleResDto> {
     const result = await this.articlesService.findOne(userData, articleId);
     return ArticlesMapper.toResDto(result);
-  }
+  } // дістаємо потрібний нам пост по його id
 
   @Patch(':articleId')
   public async update(

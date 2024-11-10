@@ -46,7 +46,8 @@ export class ArticlesService {
   ): Promise<[ArticleEntity[], number]> {
     return await this.articleRepository.findAll(userData, query);
   } // повертаємо масив в якому буде міститись масив статей та
-  // їх кількість [ArticleEntity[], number]
+  // їх кількість [ArticleEntity[], number] та
+  // статус є підписка на автора посту чи ні isFollowed (true/false)
 
   public async findOne(
     userData: IUserData,

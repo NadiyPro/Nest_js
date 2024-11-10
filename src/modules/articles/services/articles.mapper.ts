@@ -28,7 +28,9 @@ export class ArticlesMapper {
       tags: data.tags ? data.tags.map((tag) => tag.name) : [],
       // якщо тегів немає, то поверне порожній масив
       user: data.user ? UserMapper.toResDto(data.user) : null,
-      // якщо користувача немає, то поверне null
+      // якщо юзера немає, то поверне null
+      // якщо юзер є, то віддаємо статус є підписка на автора посту чи ні
+      // isFollowed (true/false)
     };
   }
 }

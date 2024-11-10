@@ -48,8 +48,11 @@ export class ArticlesService {
   } // повертаємо масив в якому буде міститись масив статей та
   // їх кількість [ArticleEntity[], number]
 
-  public async findOne(articleId: ArticleID): Promise<ArticleEntity> {
-    return {} as any;
+  public async findOne(
+    userData: IUserData,
+    articleId: ArticleID,
+  ): Promise<ArticleEntity> {
+    return await this.articleRepository.getById(userData, articleId);
   } // Метод для пошуку однієї статті за її ідентифікатором
 
   public async update(

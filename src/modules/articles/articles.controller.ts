@@ -61,9 +61,10 @@ export class ArticlesController {
 
   @Get(':articleId')
   public async findOne(
+    @CurrentUser() userData: IUserData,
     @Param('articleId') articleId: ArticleID,
   ): Promise<ArticleResDto> {
-    const result = await this.articlesService.findOne(articleId);
+    const result = await this.articlesService.findOne(userData, articleId);
     return ArticlesMapper.toResDto(result);
   }
 

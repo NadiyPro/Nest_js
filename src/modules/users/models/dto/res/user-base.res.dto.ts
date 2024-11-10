@@ -4,4 +4,5 @@ export class UserBaseResDto {
   email: string;
   bio?: string;
   image?: string;
+  isFollowed?: boolean;
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
+import { ArticleID } from '../../../common/types/entity-ids.type';
 import { ArticleEntity } from '../../../database/entities/article.entity';
 import { ListArticleQueryDto } from '../../articles/dto/req/list-article-query.dto';
 import { IUserData } from '../../auth/models/interfaces/user-data.interface';
@@ -46,6 +47,15 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     qb.leftJoinAndSelect('article.user', 'user');
     //  Виконує ліве з'єднання з таблицею користувачів (user),
     //  що дозволяє додати інформацію про автора статті до результатів
+    qb.leftJoinAndSelect(
+      'user.followings',
+      'following',
+      'following.follower_id = :userId',
+      { userId: userData.userId },
+    ); // тут ми звертаємось до таблиці, яку у попередній строчці кода назвали "user"
+    //'following.follower_id = :userId' це додаткова умова, щоб зробити вибірку трохи вужчою,
+    // тобто ми хочемо додавати у вибірку лише тих юзерів у кого id = моєму id
+    // таким чином ми витягнемо всіх юзерів на кого я підписана
 
     if (query.search) {
       qb.andWhere('CONCAT(article.title, article.description) ILIKE :search');
@@ -85,4 +95,21 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // повертає результат у вигляді масиву в якому буде міститись масив статей
     // та їх кількість [ArticleEntity[], number]
   }
+
+  public async getById(
+    userData: IUserData,
+    articleId: ArticleID,
+  ): Promise<ArticleEntity> {
+    const qb = this.createQueryBuilder('article');
+    qb.leftJoinAndSelect('article.tags', 'tag');
+    qb.leftJoinAndSelect('article.user', 'user');
+    qb.leftJoinAndSelect(
+      'user.followings',
+      'following',
+      'following.follower_id = :userId',
+      { userId: userData.userId },
+    );
+    qb.where('article.id = :articleId', { articleId });
+    return await qb.getOne();
+  } //
 }

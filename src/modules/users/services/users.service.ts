@@ -3,6 +3,8 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { UserID } from '../../../common/types/entity-ids.type';
 import { UserEntity } from '../../../database/entities/user.entity';
 import { IUserData } from '../../auth/models/interfaces/user-data.interface';
+import { ContentType } from '../../file-storage/enums/content-type.enum';
+import { FileStorageService } from '../../file-storage/services/file-storage.service';
 import { FollowRepository } from '../../repository/services/follow.repository';
 import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
 import { UserRepository } from '../../repository/services/user.repository';
@@ -12,6 +14,7 @@ import { UpdateUserReqDto } from '../models/dto/req/update-user.req.dto';
 export class UsersService {
   constructor(
     // private readonly configService: ConfigService<Config>,
+    private readonly fileStorageService: FileStorageService,
     private readonly userRepository: UserRepository,
     private readonly followRepository: FollowRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
@@ -60,23 +63,29 @@ export class UsersService {
     file: Express.Multer.File,
   ): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: userData.userId });
+    // шукаємо юзера по id
     const pathToFile = await this.fileStorageService.uploadFile(
       file,
       ContentType.IMAGE,
       userData.userId,
-    );
+    ); // завантажуємо аватар для юзера під зазначеним id
     if (user.image) {
       await this.fileStorageService.deleteFile(user.image);
-    }
+    } // якщо у юзера вже є якась картинка (аватор), то ми його видаляємо
+    // тобто видаляємо попередню картинку, а замість неї завантажуємо якусь нову
     await this.userRepository.save({ ...user, image: pathToFile });
+    // зберігаємо оновлену інформацію по юзеру вже з аватаром у БД табл юзерів
+    // тобто, при збережені старий аватар перетирається на новий
   }
 
   public async deleteAvatar(userData: IUserData): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: userData.userId });
+    // шукаємо юзера по id в БД юзерів
     if (user.image) {
       await this.fileStorageService.deleteFile(user.image);
       await this.userRepository.save({ ...user, image: null });
-    }
+    } // якщо у юзера є аватар, то ми його видаляємо
+    // і зберігаємо юзера з імеджом "null"
   }
 
   public async findOne(userId: UserID): Promise<UserEntity> {

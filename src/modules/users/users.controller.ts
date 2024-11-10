@@ -13,6 +13,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+import { ApiFile } from '../../common/decorators/api-file.decorator';
 import { UserID } from '../../common/types/entity-ids.type';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../auth/decorators/skip-auth.decorator';
@@ -21,7 +22,6 @@ import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
 import { UserBaseResDto } from './models/dto/res/user-base.res.dto';
 import { UserMapper } from './services/user.mapper';
 import { UsersService } from './services/users.service';
-import { ApiFile } from '../../common/decorators/api-file.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -70,7 +70,13 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<void> {
     await this.usersService.uploadAvatar(userData, file);
-  }
+  } // завантажуємо автар (згідно наших .enw на MinIO)
+
+  @ApiBearerAuth()
+  @Delete('me/avatar')
+  public async deleteAvatar(@CurrentUser() userData: IUserData): Promise<void> {
+    await this.usersService.deleteAvatar(userData);
+  } // видаляємо аватар
 
   @SkipAuth()
   @Get(':userId')

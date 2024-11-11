@@ -126,6 +126,8 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // чи автор є в підписках користувача userData
     qb.where('article.id = :articleId', { articleId });
     // фільтрує статтю за її унікальним articleId, щоб отримати лише один запис
+    // де :articleId - це динамічний параметр, тобто це id поста який ми шукаємо
+    // (ми id посту, який шукаємо, прописуємо в swagger в полі articleId)
     return await qb.getOne();
   } // використовується для отримання конкретної статті за її ідентифікатором articleId,
   // додатково зберігаючи інформацію про теги, автора, а також перевіряючи,

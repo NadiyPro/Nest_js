@@ -11,7 +11,14 @@ export class UserMapper {
       email: user.email,
       bio: user.bio,
       image: `${process.env.AWS_S3_ENDPOINT}/${user.image}`,
+      // Це рядок для формування URL до зображення користувача
+      // ${process.env.AWS_S3_ENDPOINT} бере значення з .env
+      // ${user.image} додає шлях до файлу зображення конкретного користувача
       isFollowed: user.followings?.length > 0 || false,
+      // якщо користувач має підписників, то повертаємо true,
+      // якщо користувач не має підписників повертаємо false
+      // (Це дозволяє уникнути помилок, якщо followings не визначений,
+      // повертаючи false за замовчуванням)
     };
   }
 

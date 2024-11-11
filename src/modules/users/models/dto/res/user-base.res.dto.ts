@@ -4,5 +4,5 @@ export class UserBaseResDto {
   email: string;
   bio?: string;
   image?: string;
-  isFollowed?: boolean;
+  isFollowed?: boolean; // підписка на автора поста
 }

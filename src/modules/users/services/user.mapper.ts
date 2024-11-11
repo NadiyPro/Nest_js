@@ -10,7 +10,7 @@ export class UserMapper {
       name: user.name,
       email: user.email,
       bio: user.bio,
-      image: `${process.env.AWS_S3_ENDPOINT}/${user.image}`,
+      image: `${user.image}`,
       // Це рядок для формування URL до зображення користувача
       // ${process.env.AWS_S3_ENDPOINT} бере значення з .env
       // ${user.image} додає шлях до файлу зображення конкретного користувача

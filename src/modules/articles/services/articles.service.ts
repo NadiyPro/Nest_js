@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { In } from 'typeorm';
 
 import { ArticleID } from '../../../common/types/entity-ids.type';
@@ -6,11 +10,11 @@ import { ArticleEntity } from '../../../database/entities/article.entity';
 import { TagEntity } from '../../../database/entities/tag.entity';
 import { IUserData } from '../../auth/models/interfaces/user-data.interface';
 import { ArticleRepository } from '../../repository/services/article.repository';
+import { LikeRepository } from '../../repository/services/like.repository';
 import { TagRepository } from '../../repository/services/tag.repository';
 import { CreateArticleDto } from '../dto/req/create-article.dto';
 import { ListArticleQueryDto } from '../dto/req/list-article-query.dto';
 import { UpdateArticleDto } from '../dto/req/update-article.dto';
-import { LikeRepository } from '../../repository/services/like.repository';
 
 @Injectable()
 export class ArticlesService {

@@ -15,6 +15,11 @@ import { CreateUpdateModel } from './models/create-update.model';
 import { RefreshTokenEntity } from './refresh-token.entity';
 
 @Index(['name'])
+// @Index(['name']) створює індекс для колонки name у таблиці users у базі даних.
+// Це означає, що база даних зможе швидше виконувати пошук,
+// сортування та фільтрацію за полем name.
+// Індекс у базі даних — це спеціальна структура,
+// що прискорює доступ до даних, дозволяючи оптимізувати запити
 @Entity('users') // назва табл в БД
 export class UserEntity extends CreateUpdateModel {
   @PrimaryGeneratedColumn('uuid')

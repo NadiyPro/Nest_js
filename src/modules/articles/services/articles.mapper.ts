@@ -25,6 +25,7 @@ export class ArticlesMapper {
       body: data.body,
       created: data.created,
       updated: data.updated,
+      isLiked: !!data.likes?.length,
       tags: data.tags ? data.tags.map((tag) => tag.name) : [],
       // якщо тегів немає, то поверне порожній масив
       user: data.user ? UserMapper.toResDto(data.user) : null,

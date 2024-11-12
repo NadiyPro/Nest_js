@@ -1,8 +1,8 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
-  Param,
+  Param, ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -63,7 +63,7 @@ export class ArticlesController {
   @Get(':articleId')
   public async findOne(
     @CurrentUser() userData: IUserData,
-    @Param('articleId') articleId: ArticleID,
+    @Param('articleId', ParseUUIDPipe) articleId: ArticleID,
   ): Promise<ArticleResDto> {
     const result = await this.articlesService.findOne(userData, articleId);
     return ArticlesMapper.toResDto(result);
@@ -72,10 +72,26 @@ export class ArticlesController {
   @Patch(':articleId')
   public async update(
     @CurrentUser() userData: IUserData,
-    @Param('articleId') articleId: ArticleID,
+    @Param('articleId', ParseUUIDPipe) articleId: ArticleID,
     @Body() dto: UpdateArticleDto,
   ): Promise<ArticleResDto> {
     const result = await this.articlesService.update(userData, articleId, dto);
     return ArticlesMapper.toResDto(result);
+  }
+
+  @Post(':articleId/like')
+  public async like(
+    @CurrentUser() userData: IUserData,
+    @Param('articleId', ParseUUIDPipe) articleId: ArticleID,
+  ): Promise<void> {
+    await this.articlesService.like(userData, articleId);
+  }
+
+  @Delete(':articleId/like')
+  public async unlike(
+    @CurrentUser() userData: IUserData,
+    @Param('articleId', ParseUUIDPipe) articleId: ArticleID,
+  ): Promise<void> {
+    await this.articlesService.unlike(userData, articleId);
   }
 }

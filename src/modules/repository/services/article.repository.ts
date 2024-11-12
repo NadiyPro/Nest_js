@@ -51,7 +51,6 @@ export class ArticleRepository extends Repository<ArticleEntity> {
       'user.followings',
       'following',
       'following.follower_id = :userId',
-      { userId: userData.userId },
     ); // в результаті, тут отримуємо тільки тих юзерів, на яких підписаний конкретний користувач
     // (ідентифікатор якого передається через userData.userId)
     //leftJoinAndSelect виконує LEFT JOIN між таблицею користувачів (user) і таблицею,
@@ -66,6 +65,8 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // у кого follower_id = моєму id (userData.userId)
     // таким чином ми витягнемо всіх юзерів на кого я підписана
     // { userId: userData.userId }: задає значення параметру userId, який використовується в умові ON
+    qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :userId');
+    qb.setParameter('userId', userData.userId);
 
     if (query.search) {
       qb.andWhere('CONCAT(article.title, article.description) ILIKE :search');

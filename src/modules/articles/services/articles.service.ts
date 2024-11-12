@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { In } from 'typeorm';
 
 import { ArticleID } from '../../../common/types/entity-ids.type';
@@ -10,12 +10,14 @@ import { TagRepository } from '../../repository/services/tag.repository';
 import { CreateArticleDto } from '../dto/req/create-article.dto';
 import { ListArticleQueryDto } from '../dto/req/list-article-query.dto';
 import { UpdateArticleDto } from '../dto/req/update-article.dto';
+import { LikeRepository } from '../../repository/services/like.repository';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     private readonly articleRepository: ArticleRepository,
     private readonly tagRepository: TagRepository,
+    private readonly likeRepository: LikeRepository,
   ) {}
 
   public async create(
@@ -63,6 +65,49 @@ export class ArticlesService {
   ): Promise<ArticleEntity> {
     return {} as any;
   } // Метод для оновлення посту
+
+  public async like(userData: IUserData, articleId: ArticleID): Promise<void> {
+    const article = await this.articleRepository.findOneBy({ id: articleId });
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+    const like = await this.likeRepository.findOneBy({
+      user_id: userData.userId,
+      article_id: articleId,
+    });
+    if (like) {
+      throw new ConflictException('You already liked this article');
+    } // перевіряємо чи лайкав юзер вже цей пост
+    // якщо юзер вже лайкав, цей пост, то видамо помилку
+    // (бо юзер може поставити лише один лайк на пост)
+    await this.likeRepository.save(
+      this.likeRepository.create({
+        user_id: userData.userId,
+        article_id: articleId,
+      }),
+    ); // якщо юзер раніше поточний пост НЕ лайкав, то зберігаємо лайк в БД
+  }
+
+  public async unlike(
+    userData: IUserData,
+    articleId: ArticleID,
+  ): Promise<void> {
+    const article = await this.articleRepository.findOneBy({ id: articleId });
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    } // якщо пост під зазначеним articleId НЕ існує, то видаємо помилку
+    const like = await this.likeRepository.findOneBy({
+      user_id: userData.userId,
+      article_id: articleId,
+    });
+    if (!like) {
+      throw new ConflictException('You have not liked this article yet');
+    } // якщо лайк на пост раніше не був поставлений,
+    // відповідно ми не можемо його прибрати з посту, оскільки лайка не існує
+    await this.likeRepository.remove(like);
+    // якщо лайк поставлений на пост, то йдемо в репоиторій (БД)
+    // та видаляємо цей лайк з поточного посту
+  }
 
   private async createTags(tags: string[]): Promise<TagEntity[]> {
     if (!tags || !tags.length) return [];

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -12,6 +13,12 @@ import { ArticleEntity } from './article.entity';
 import { TableNameEnum } from './enums/table-name.enum';
 import { UserEntity } from './user.entity';
 
+@Index(['user_id', 'article_id'], { unique: true })
+// @Index()  допомагає базі даних швидше виконувати пошукові запити на цих полях
+//  { unique: true }  запобігає повторенню значень у зазначеному полі
+//  (забезпечує унікальність значень в полі).
+//  В такому випадку ми гарантуємо, що один юзер НЕ поставить два лайки одному посту,
+//  бо значення в цих обох колонках мають бути унікальними
 @Entity(TableNameEnum.LIKES)
 export class LikeEntity {
   @PrimaryGeneratedColumn('uuid')

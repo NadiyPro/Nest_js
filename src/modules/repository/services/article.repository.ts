@@ -66,7 +66,16 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // таким чином ми витягнемо всіх юзерів на кого я підписана
     // { userId: userData.userId }: задає значення параметру userId, який використовується в умові ON
     qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :userId');
+    // 'article.likes' приєднує таблицю likes до article, щоб отримати інформацію про лайки,
+    // додані користувачем із userData.userId
+    // 'like': Псевдонім для звертання до полів у таблиці likes
+    // 'like.user_id = :userId': витягаємо пости з лайками лише для конкретного користувача,
+    // ідентифікатор якого відповідає userId
     qb.setParameter('userId', userData.userId);
+    // setParameter задає значення для параметра userId,
+    // який використовується у фільтрах при leftJoinAndSelect.
+    // У даному випадку userId береться з userData.userId,
+    // що дозволяє зробити запит конкретно для цього користувача
 
     if (query.search) {
       qb.andWhere('CONCAT(article.title, article.description) ILIKE :search');
@@ -125,8 +134,17 @@ export class ArticleRepository extends Repository<ArticleEntity> {
     // приєднує таблицю підписок для автора статті, щоб перевірити,
     // чи автор є в підписках користувача userData
     qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :userId');
+    // 'article.likes' приєднує таблицю likes до article, щоб отримати інформацію про лайки,
+    // додані користувачем із userData.userId
+    // 'like': Псевдонім для звертання до полів у таблиці likes
+    // 'like.user_id = :userId': витягаємо пости з лайками лише для конкретного користувача,
+    // ідентифікатор якого відповідає userId
 
     qb.setParameter('userId', userData.userId);
+    // setParameter задає значення для параметра userId,
+    // який використовується у фільтрах при leftJoinAndSelect.
+    // У даному випадку userId береться з userData.userId,
+    // що дозволяє зробити запит конкретно для цього користувача
 
     qb.where('article.id = :articleId', { articleId });
     // фільтрує статтю за її унікальним articleId, щоб отримати лише один запис

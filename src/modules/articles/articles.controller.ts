@@ -1,8 +1,10 @@
 import {
   Body,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
-  Param, ParseUUIDPipe,
+  Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -68,6 +70,10 @@ export class ArticlesController {
     const result = await this.articlesService.findOne(userData, articleId);
     return ArticlesMapper.toResDto(result);
   } // дістаємо потрібний нам пост по його id
+  // ParseUUIDPipe в NestJS використовується як валідаційний пайп для перевірки,
+  // чи є параметр маршруту дійсним UUID (універсальним унікальним ідентифікатором)
+  // Якщо значення articleId не є валідним UUID (не унікальне),
+  // ParseUUIDPipe автоматично згенерує помилку валідації
 
   @Patch(':articleId')
   public async update(
@@ -86,6 +92,11 @@ export class ArticlesController {
   ): Promise<void> {
     await this.articlesService.like(userData, articleId);
   }
+  // ставимо лайк на конкретний пост та зберігаємо інфо з відповідним статусом в БД
+  //ParseUUIDPipe в NestJS використовується як валідаційний пайп для перевірки,
+  // чи є параметр маршруту дійсним UUID (універсальним унікальним ідентифікатором)
+  // Якщо значення articleId не є валідним UUID (не унікальне),
+  // ParseUUIDPipe автоматично згенерує помилку валідації
 
   @Delete(':articleId/like')
   public async unlike(
@@ -94,4 +105,4 @@ export class ArticlesController {
   ): Promise<void> {
     await this.articlesService.unlike(userData, articleId);
   }
-}
+} // прибираємо лайк з посту і зберігаємо інфо в БД

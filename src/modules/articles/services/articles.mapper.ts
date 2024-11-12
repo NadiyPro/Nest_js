@@ -26,6 +26,13 @@ export class ArticlesMapper {
       created: data.created,
       updated: data.updated,
       isLiked: !!data.likes?.length,
+      // ?.length — використовується для безпечного доступу до довжини масиву likes
+      // Якщо likes відсутній, вираз поверне undefined або null
+      // Отже, якщо у пості є хоча б один лайк (data.likes?.length більше нуля),
+      // то isLiked буде true в іншому випадку false
+      // !! — це подвійне заперечення, яке перетворює значення на булеве (true або false).
+      // Тобто, якщо data.likes?.length має значення більше нуля, це перетвориться на true.
+      // Якщо ж data.likes відсутній або масив порожній, результат буде false.
       tags: data.tags ? data.tags.map((tag) => tag.name) : [],
       // якщо тегів немає, то поверне порожній масив
       user: data.user ? UserMapper.toResDto(data.user) : null,

@@ -70,7 +70,8 @@ export class ArticlesService {
     const article = await this.articleRepository.findOneBy({ id: articleId });
     if (!article) {
       throw new NotFoundException('Article not found');
-    }
+    } // перевіряємо чи існує пост з вказаним articleId,
+    // якщо НЕ існує то повертаємо помилку
     const like = await this.likeRepository.findOneBy({
       user_id: userData.userId,
       article_id: articleId,

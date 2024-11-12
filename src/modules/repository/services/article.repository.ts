@@ -121,10 +121,13 @@ export class ArticleRepository extends Repository<ArticleEntity> {
       'user.followings',
       'following',
       'following.follower_id = :userId',
-      { userId: userData.userId },
     );
     // приєднує таблицю підписок для автора статті, щоб перевірити,
     // чи автор є в підписках користувача userData
+    qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :userId');
+
+    qb.setParameter('userId', userData.userId);
+
     qb.where('article.id = :articleId', { articleId });
     // фільтрує статтю за її унікальним articleId, щоб отримати лише один запис
     // де :articleId - це динамічний параметр, тобто це id поста який ми шукаємо

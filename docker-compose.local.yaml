@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.7'
 
 services:
   march-2024-postgres:
@@ -33,6 +33,21 @@ services:
       - MINIO_ROOT_USER=user            # AWS_S3_ACCESS_KEY
       - MINIO_ROOT_PASSWORD=password    # AWS_S3_SECRET_KEY
 
+  web:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./march-2024-frontend/build:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - march-2024-postgres
+      - march-2024-redis
+      - march-2024-s3
+    restart: unless-stopped
+
 volumes:
   march-2024-api-db:
   march-2024-api-s3:
+  march-2024-frontend:
+
